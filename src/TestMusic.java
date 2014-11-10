@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
@@ -17,6 +18,24 @@ public class TestMusic {
 	{
 		System.out.printf("Hello world%n");
 		playNotes();
+		int rating = getUserRating();
+		System.out.printf("the rating was %d%n", rating);
+	}
+	
+	public static int getUserRating()
+	{
+		System.out.printf("Rate what you just heard from 1-10%n");
+		Scanner scan = new Scanner(System.in);
+		int input = -1;
+		while (!(input >= 1 && input <= 10))
+		{
+			while (!scan.hasNextInt()) {
+				scan.next();
+			}
+			input = scan.nextInt();
+		}
+		scan.close();
+		return input;
 	}
 	
 	public static void playNotes()
@@ -29,6 +48,7 @@ public class TestMusic {
             sequencer.setSequence(seq);
             sequencer.setTempoInBPM(60.0f);
             sequencer.start();
+            System.out.printf("Sequencer finished");
             //sequencer.close();
         } catch (Exception e) {
             e.printStackTrace();
