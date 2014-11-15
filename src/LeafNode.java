@@ -1,18 +1,10 @@
-import java.util.ArrayList;
 import java.util.List;
 
-public class LeafNode<T> extends Node<T>{
+public abstract class LeafNode extends Node{
 	
-	public LeafNode(T data) {
-		super(data);
+	public LeafNode() {
+		super();
 	}
 
-	public List<T> render() {
-		List<T> l = new ArrayList<T>();
-		l.add(this.data);
-		return l;
-	}
-	
-	
-
+	public abstract List<MusicEvent> render(int time);
 }

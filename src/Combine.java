@@ -2,19 +2,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Combine extends ParentNode<MusicEvent> {
+public class Combine extends ParentNode {
 
 	public Combine(MusicEvent data) {
-		super(data);
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
-	public List<MusicEvent> render() {
+	public List<MusicEvent> render(int time) {
 		List<MusicEvent> list = new ArrayList<MusicEvent>();
 		
-		for (Node<MusicEvent> eachChild : this.children)
+		for (Node eachChild : this.children)
 		{
-			list.addAll(eachChild.render());
+			list.addAll(eachChild.render(time));
 		}
 		return list;
 	}
