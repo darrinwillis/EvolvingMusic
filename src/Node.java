@@ -8,5 +8,7 @@ public abstract class Node {
 		this.parent.children.remove(this);
 	}
 	
+	public abstract int arity();
+	
 	public abstract List<MusicEvent> render(int time);
 }

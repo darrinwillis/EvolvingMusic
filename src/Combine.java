@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Combine extends ParentNode {
 
-	public Combine(MusicEvent data) {
+	public Combine() {
 		super();
 	}
 
@@ -16,6 +16,10 @@ public class Combine extends ParentNode {
 			list.addAll(eachChild.render(time));
 		}
 		return list;
+	}
+	
+	public int arity() {
+		return 2;
 	}
 
 }

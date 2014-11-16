@@ -1,9 +1,20 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class MusicTree {
-	Node root;
+	private Node root;
+	private static final Random r = new Random();
+	
+	public static MusicTree RandomTree(long seed, int maxDepth)
+	{
+		r.setSeed(seed);
+		MusicTree mt = new MusicTree();
+		
+		//Generate random nodes
+		
+		return mt;
+	}
 	
 	public void mutate(double prob)
 	{
@@ -17,6 +28,6 @@ public class MusicTree {
 	
 	public List<MusicEvent> render()
 	{
-		return new ArrayList<MusicEvent>();
+		return root.render(0);
 	}
 }
