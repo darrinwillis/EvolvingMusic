@@ -77,7 +77,7 @@ public class Player {
 
 	private void addTree(Track track, MusicTree mt)
 	{
-		List<MusicEvent> events = mt.render();
+		List<MusicEvent> events = mt.getRender();
 		for (MusicEvent me : events)
 		{
 			addNote(track, me.note, me.time);

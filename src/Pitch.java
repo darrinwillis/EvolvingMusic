@@ -81,4 +81,19 @@ public class Pitch {
 		int octave = ThreadLocalRandom.current().nextInt(HIGH_OCTAVE - LOW_OCTAVE) + LOW_OCTAVE;
 		return new Pitch(pc, octave);
 	}
+	
+	public boolean isMajor()
+	{
+		return PitchClass.MAJORS.contains(pitchClass);
+	}
+	
+	public boolean isMinor()
+	{
+		return PitchClass.MINORS.contains(pitchClass);
+	}
+	
+	public boolean isPentatonic()
+	{
+		return PitchClass.PENTATONICS.contains(pitchClass);
+	}
 }

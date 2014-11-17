@@ -1,8 +1,12 @@
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class MusicTree {
 	private Node root;
+	private List<MusicEvent> renderedEvents = null;
+	private Double fitness = null;
 	
 	public static MusicTree RandomTree(int maxDepth)
 	{
@@ -43,8 +47,71 @@ public class MusicTree {
 		return;
 	}
 	
-	public List<MusicEvent> render()
+	public List<MusicEvent> getRender()
+	{
+		if (renderedEvents == null)
+		{
+			renderedEvents = render();
+		}
+		return renderedEvents;
+	}
+	
+	private List<MusicEvent> render()
 	{
 		return root.render(0);
+	}
+	
+	public Double getFitness()
+	{
+		if (fitness == null)
+		{
+			fitness = calcFitness();
+		}
+		return fitness;
+	}
+	
+	private double calcFitness()
+	{
+		double keyScore = evaluateKey();
+		double rhythymScore = evaluateRhythm();
+		return keyScore + rhythymScore;
+	}
+	
+	private double evaluateKey()
+	{
+		List<MusicEvent> events = getRender();
+		long numMajors = events
+				.stream()
+				.filter((me) -> me.note.pitch.isMajor())
+				.count();
+		long numMinors = events
+				.stream()
+				.filter((me) -> me.note.pitch.isMinor())
+				.count();
+		long numPitches = events.size();
+		
+		//keynum is the number of notes in the key which is closest to this collection of notes
+		long keyNum = Long.max(numMajors, numMinors);
+		return (double)keyNum / (double)numPitches;
+	}
+	
+	private double evaluateRhythm()
+	{
+		List<MusicEvent> events = getRender();
+		int numEvents = events.size();
+		Map<Integer, Integer> eventsPerBeat = events
+				.stream()
+				.collect(
+						Collectors.groupingBy(
+								me -> me.time % 16,
+								Collectors.summingInt(me -> 1)));
+		assert eventsPerBeat.size() <= 16;
+		assert eventsPerBeat.values()
+			.stream()
+			.mapToInt(Integer::intValue)
+			.sum() == numEvents;
+		int numDownBeats = eventsPerBeat.get(0);
+		int beatStrength = numDownBeats + eventsPerBeat.get(4) + eventsPerBeat.get(8) + eventsPerBeat.get(12);
+		return (double)(numDownBeats + beatStrength) / (double)numEvents;
 	}
 }

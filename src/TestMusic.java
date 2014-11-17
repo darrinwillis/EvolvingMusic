@@ -11,7 +11,7 @@ public class TestMusic {
 	{
 		Player player = new Player();
 		
-		int maxDepth = 6;
+		int maxDepth = 12;
 		MusicTree mt = MusicTree.RandomTree(maxDepth);
 		
 		player.playTree(mt);
