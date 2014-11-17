@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -9,13 +10,49 @@ public class Pitch {
 		C, C$, D, D$, E, F, F$, G, G$, A, A$, B;
 		
 		private static final Random RANDOM = new Random();
+		
+		// All pitch classes
 		private static final List<PitchClass> VALUES =
 				Collections.unmodifiableList(Arrays.asList(values()));
 		public static final int SIZE = VALUES.size();
 		
+		// All major diatonics
+		public static final List<PitchClass> MAJORS = 
+				new ArrayList<PitchClass>(Arrays.asList(
+						C, D, E, F, G, A, B));
+		public static final int MAJSIZE = MAJORS.size();
+		
+		// All minor diatonics
+		public static final List<PitchClass> MINORS = 
+				new ArrayList<PitchClass>(Arrays.asList(
+						C, D, D$, F, G, G$, A$));
+		public static final int MINSIZE = MINORS.size();
+		
+		
+		// All pentatonics
+		public static final List<PitchClass> PENTATONICS = 
+				new ArrayList<PitchClass>(Arrays.asList(
+						C, D, E, G, A));
+		public static final int PSIZE = PENTATONICS.size();
+		
 		public static PitchClass randomPitchClass()
 		{
 			return VALUES.get(RANDOM.nextInt(SIZE));
+		}
+		
+		public static PitchClass randomPentatonic()
+		{
+			return PENTATONICS.get(RANDOM.nextInt(PSIZE));
+		}
+		
+		public static PitchClass randomMajor()
+		{
+			return MAJORS.get(RANDOM.nextInt(MAJSIZE));
+		}
+		
+		public static PitchClass randomMinor()
+		{
+			return MINORS.get(RANDOM.nextInt(MINSIZE));
 		}
 	}
 	
@@ -43,6 +80,7 @@ public class Pitch {
 	public static Pitch randomPitch()
 	{
 		PitchClass pc = PitchClass.randomPitchClass();
+
 		int octave = r.nextInt(HIGH_OCTAVE - LOW_OCTAVE) + LOW_OCTAVE;
 		return new Pitch(pc, octave);
 	}
