@@ -9,7 +9,8 @@ public class RandomNodeGenerator {
 	//Function classes
 	private static final List<Class<? extends ParentNode>> pnClasses = new ArrayList<Class<? extends ParentNode>>(
 			Arrays.asList(
-					Combine.class
+					Combine.class,
+					Follow.class
 					)
 			);
 	private static final int numPNClasses = pnClasses.size();

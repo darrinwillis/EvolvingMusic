@@ -3,8 +3,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MetaEventListener;
-import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
@@ -71,7 +69,7 @@ public class TestMusic {
 	private void makeTrack(Sequence seq)
 	{
 		Track track = seq.createTrack();
-		MusicTree mt = MusicTree.RandomTree(r.nextLong(), 5);
+		MusicTree mt = MusicTree.RandomTree(r.nextLong(), 7);
 		addTree(track, mt);
 //		int time = 0;
 //		for (int i = 0; i < 20; i++)
