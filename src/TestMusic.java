@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -48,8 +49,9 @@ public class TestMusic {
             sequencer.setSequence(seq);
             sequencer.setTempoInBPM(60.0f);
             sequencer.start();
+            while(sequencer.isRunning());
             System.out.printf("Sequencer finished");
-            //sequencer.close();
+            sequencer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,24 +60,28 @@ public class TestMusic {
 	private static void makeTrack(Sequence seq)
 	{
 		Track track = seq.createTrack();
-		int time = 0;
-		for (int i = 0; i < 20; i++)
-		{
-			Note n = Note.randomNote();
-			addNote(track, n, time);
-			System.out.printf("Made note with duration %d%n", n.duration);
-			time += n.duration;
-		}
+		MusicTree mt = MusicTree.RandomTree(r.nextLong(), 5);
+		addTree(track, mt);
 		
-//		Track track = seq.createTrack();
-//		for (int i = 0; i < 120; i+= 4) {
-//			int d = (int) (i / 4) % 24 + 32;
-//            track.add(makeEvent(ShortMessage.NOTE_ON, 1, d, 127, i));
-//            //track.add(makeEvent(ShortMessage.CONTROL_CHANGE, 1, 127, 0, i));
-//            track.add(makeEvent(ShortMessage.NOTE_OFF, 1, d, 127, i+4));
-//        }
+//		int time = 0;
+//		for (int i = 0; i < 20; i++)
+//		{
+//			Note n = Note.randomNote();
+//			addNote(track, n, time);
+//			time += n.duration;
+//		}
 	}
 
+	private static void addTree(Track track, MusicTree mt)
+	{
+		List<MusicEvent> events = mt.render();
+		for (MusicEvent me : events)
+		{
+			addNote(track, me.note, me.time);
+		}
+		
+	}
+	
 	private static void addNote(Track track, Note n, int start)
 	{
 		//duration is in terms of the PPQ value as defined by the sequence

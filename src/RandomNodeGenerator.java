@@ -27,7 +27,7 @@ public class RandomNodeGenerator {
 	public static ParentNode randomParentNode(long seed)
 	{
 		r.setSeed(seed);
-		Class<? extends ParentNode> pnclass = pnClasses.get(r.nextInt() * numPNClasses);
+		Class<? extends ParentNode> pnclass = pnClasses.get(r.nextInt(numPNClasses));
 		ParentNode newNode = null;
 		try {
 			newNode = pnclass.newInstance();
@@ -42,7 +42,7 @@ public class RandomNodeGenerator {
 	public static LeafNode randomLeafNode(long seed)
 	{
 		r.setSeed(seed);
-		Class<? extends LeafNode> leafClass = leafClasses.get(r.nextInt() * numLeafClasses);
+		Class<? extends LeafNode> leafClass = leafClasses.get(r.nextInt(numLeafClasses));
 		LeafNode newNode = null;
 		try {
 			newNode = leafClass.newInstance();
