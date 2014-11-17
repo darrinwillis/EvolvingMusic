@@ -3,6 +3,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MetaEventListener;
+import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
@@ -15,15 +17,22 @@ public class TestMusic {
 
 	public static Random r = new Random();
 	
+	private Sequencer sequencer;
+	
 	public static void main(String[] args)
 	{
-		System.out.printf("Hello world%n");
+		new TestMusic().run();
+	}
+	
+	public void run()
+	{
 		playNotes();
 		int rating = getUserRating();
 		System.out.printf("the rating was %d%n", rating);
+		this.sequencer.close();
 	}
 	
-	public static int getUserRating()
+	public int getUserRating()
 	{
 		System.out.printf("Rate what you just heard from 1-10%n");
 		Scanner scan = new Scanner(System.in);
@@ -39,30 +48,31 @@ public class TestMusic {
 		return input;
 	}
 	
-	public static void playNotes()
+	public void playNotes()
 	{
 		try{
 			Sequence seq = new Sequence(Sequence.PPQ, 4);
 			makeTrack(seq);
-            Sequencer sequencer = MidiSystem.getSequencer();
+			sequencer = MidiSystem.getSequencer();
             sequencer.open();
             sequencer.setSequence(seq);
             sequencer.setTempoInBPM(60.0f);
             sequencer.start();
-            while(sequencer.isRunning());
-            System.out.printf("Sequencer finished");
-            sequencer.close();
+            while(sequencer.isRunning()){
+            	Thread.yield();
+            }
+            sequencer.stop();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 	
-	private static void makeTrack(Sequence seq)
+	private void makeTrack(Sequence seq)
 	{
 		Track track = seq.createTrack();
 		MusicTree mt = MusicTree.RandomTree(r.nextLong(), 5);
 		addTree(track, mt);
-		
 //		int time = 0;
 //		for (int i = 0; i < 20; i++)
 //		{
@@ -72,7 +82,7 @@ public class TestMusic {
 //		}
 	}
 
-	private static void addTree(Track track, MusicTree mt)
+	private void addTree(Track track, MusicTree mt)
 	{
 		List<MusicEvent> events = mt.render();
 		for (MusicEvent me : events)
@@ -82,7 +92,7 @@ public class TestMusic {
 		
 	}
 	
-	private static void addNote(Track track, Note n, int start)
+	private void addNote(Track track, Note n, int start)
 	{
 		//duration is in terms of the PPQ value as defined by the sequence
 		int duration = n.duration;
@@ -94,7 +104,7 @@ public class TestMusic {
 		track.add(makeEvent(ShortMessage.NOTE_OFF, 1, pitch, 127, start + duration));
 	}
 	
-    private static  MidiEvent makeEvent(int cmd, int chan, int d1, int d2, int tick) {
+    private MidiEvent makeEvent(int cmd, int chan, int d1, int d2, int tick) {
         MidiEvent event = null;
         try {
             ShortMessage sm = new ShortMessage();
@@ -105,4 +115,5 @@ public class TestMusic {
         }
         return event;
     }
+
 }
