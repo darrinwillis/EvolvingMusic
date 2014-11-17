@@ -1,10 +1,8 @@
 import java.util.List;
-import java.util.Random;
 
 
 public class MusicTree {
 	private Node root;
-	private static final Random r = new Random();
 	
 	public static MusicTree RandomTree(int maxDepth)
 	{
@@ -12,8 +10,8 @@ public class MusicTree {
 		MusicTree mt = new MusicTree();
 		
 		//Generate random nodes
-		Node n = maxDepth > 1 ? RandomNodeGenerator.randomParentNode(r.nextLong()) :
-			RandomNodeGenerator.randomLeafNode(r.nextLong());
+		Node n = maxDepth > 1 ? RandomNodeGenerator.randomParentNode() :
+			RandomNodeGenerator.randomLeafNode();
 		fillNode(n, maxDepth - 1);
 		mt.root = n;
 		return mt;
@@ -28,8 +26,8 @@ public class MusicTree {
 		for (int i = 0; i < numChildren; i++)
 		{
 			assert depth > 0;
-			Node child = (depth == 1) ? RandomNodeGenerator.randomLeafNode(r.nextLong()) :
-				RandomNodeGenerator.randomParentNode(r.nextLong());
+			Node child = (depth == 1) ? RandomNodeGenerator.randomLeafNode() :
+				RandomNodeGenerator.randomParentNode();
 			fillNode(child, depth - 1);
 			n.children.add(child);
 		}

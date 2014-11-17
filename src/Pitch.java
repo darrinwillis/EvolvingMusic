@@ -2,14 +2,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Pitch {
 	public enum PitchClass {
 		C, C$, D, D$, E, F, F$, G, G$, A, A$, B;
-		
-		private static final Random RANDOM = new Random();
 		
 		// All pitch classes
 		private static final List<PitchClass> VALUES =
@@ -37,30 +35,29 @@ public class Pitch {
 		
 		public static PitchClass randomPitchClass()
 		{
-			return VALUES.get(RANDOM.nextInt(SIZE));
+			return VALUES.get(ThreadLocalRandom.current().nextInt(SIZE));
 		}
 		
 		public static PitchClass randomPentatonic()
 		{
-			return PENTATONICS.get(RANDOM.nextInt(PSIZE));
+			return PENTATONICS.get(ThreadLocalRandom.current().nextInt(PSIZE));
 		}
 		
 		public static PitchClass randomMajor()
 		{
-			return MAJORS.get(RANDOM.nextInt(MAJSIZE));
+			return MAJORS.get(ThreadLocalRandom.current().nextInt(MAJSIZE));
 		}
 		
 		public static PitchClass randomMinor()
 		{
-			return MINORS.get(RANDOM.nextInt(MINSIZE));
+			return MINORS.get(ThreadLocalRandom.current().nextInt(MINSIZE));
 		}
 	}
 	
 	public int octave;
 	
 	public PitchClass pitchClass;
-	
-	private static final Random r = new Random();
+
 	private static final int HIGH_OCTAVE = 8;
 	private static final int LOW_OCTAVE = 2;
 	
@@ -81,7 +78,7 @@ public class Pitch {
 	{
 		PitchClass pc = PitchClass.randomPitchClass();
 
-		int octave = r.nextInt(HIGH_OCTAVE - LOW_OCTAVE) + LOW_OCTAVE;
+		int octave = ThreadLocalRandom.current().nextInt(HIGH_OCTAVE - LOW_OCTAVE) + LOW_OCTAVE;
 		return new Pitch(pc, octave);
 	}
 }

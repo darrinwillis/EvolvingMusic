@@ -1,4 +1,4 @@
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Note {
@@ -6,8 +6,6 @@ public class Note {
 	public Pitch pitch;
 	
 	public int duration;
-	
-	private static final Random rand = new Random();
 	
 	Note(Pitch pitch, int duration)
 	{
@@ -23,7 +21,7 @@ public class Note {
 	public static Note randomNote()
 	{
 		Pitch p = Pitch.randomPitch();
-		int duration = rand.nextInt(4) + 1;
+		int duration = ThreadLocalRandom.current().nextInt(4) + 1;
 		return new Note(p, duration);
 	}
 }

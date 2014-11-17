@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.Random;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
@@ -12,8 +11,6 @@ import javax.sound.midi.Track;
 
 
 public class Player {
-
-	public static Random r = new Random();
 	
 	public float BPM = 60.0f;
 	

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class RandomNodeGenerator {
@@ -23,12 +23,9 @@ public class RandomNodeGenerator {
 			);
 	private static final int numLeafClasses = leafClasses.size();
 	
-	private static final Random r = new Random();
-	
-	public static ParentNode randomParentNode(long seed)
+	public static ParentNode randomParentNode()
 	{
-		r.setSeed(seed);
-		Class<? extends ParentNode> pnclass = pnClasses.get(r.nextInt(numPNClasses));
+		Class<? extends ParentNode> pnclass = pnClasses.get(ThreadLocalRandom.current().nextInt(numPNClasses));
 		ParentNode newNode = null;
 		try {
 			newNode = pnclass.newInstance();
@@ -40,10 +37,9 @@ public class RandomNodeGenerator {
 		return newNode;
 	}
 	
-	public static LeafNode randomLeafNode(long seed)
+	public static LeafNode randomLeafNode()
 	{
-		r.setSeed(seed);
-		Class<? extends LeafNode> leafClass = leafClasses.get(r.nextInt(numLeafClasses));
+		Class<? extends LeafNode> leafClass = leafClasses.get(ThreadLocalRandom.current().nextInt(numLeafClasses));
 		LeafNode newNode = null;
 		try {
 			newNode = leafClass.newInstance();
