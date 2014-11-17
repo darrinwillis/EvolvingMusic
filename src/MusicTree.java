@@ -6,10 +6,9 @@ public class MusicTree {
 	private Node root;
 	private static final Random r = new Random();
 	
-	public static MusicTree RandomTree(long seed, int maxDepth)
+	public static MusicTree RandomTree(int maxDepth)
 	{
 		assert maxDepth >= 1;
-		r.setSeed(seed);
 		MusicTree mt = new MusicTree();
 		
 		//Generate random nodes
