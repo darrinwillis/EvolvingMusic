@@ -58,11 +58,10 @@ public class TestMusic {
 	private static void makeTrack(Sequence seq)
 	{
 		Track track = seq.createTrack();
-		Random r = new Random();
 		int time = 0;
 		for (int i = 0; i < 20; i++)
 		{
-			Note n = Note.randomNote(r.nextLong());
+			Note n = Note.randomNote();
 			addNote(track, n, time);
 			System.out.printf("Made note with duration %d%n", n.duration);
 			time += n.duration;

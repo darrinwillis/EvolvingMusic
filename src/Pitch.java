@@ -13,9 +13,8 @@ public class Pitch {
 				Collections.unmodifiableList(Arrays.asList(values()));
 		public static final int SIZE = VALUES.size();
 		
-		public static PitchClass randomPitchClass(long seed)
+		public static PitchClass randomPitchClass()
 		{
-			RANDOM.setSeed(seed);
 			return VALUES.get(RANDOM.nextInt(SIZE));
 		}
 	}
@@ -41,10 +40,9 @@ public class Pitch {
 		return octave * (PitchClass.SIZE) + pitchClass.ordinal();
 	}
 	
-	public static Pitch randomPitch(long seed)
+	public static Pitch randomPitch()
 	{
-		r.setSeed(seed);
-		PitchClass pc = PitchClass.randomPitchClass(r.nextInt());
+		PitchClass pc = PitchClass.randomPitchClass();
 		int octave = r.nextInt(HIGH_OCTAVE - LOW_OCTAVE) + LOW_OCTAVE;
 		return new Pitch(pc, octave);
 	}

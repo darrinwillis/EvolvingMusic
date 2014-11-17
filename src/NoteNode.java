@@ -4,7 +4,13 @@ import java.util.List;
 
 public class NoteNode extends LeafNode {
 
-	Note n;
+	private Note n;
+	
+	//This default constructor is a random one
+	public NoteNode() {
+		super();
+		this.n = Note.randomNote();
+	}
 	
 	public NoteNode(Note n) {
 		super();

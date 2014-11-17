@@ -4,6 +4,7 @@ public abstract class LeafNode extends Node{
 	
 	public LeafNode() {
 		super();
+		this.children = null;
 	}
 	
 	public int arity() {

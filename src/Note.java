@@ -20,10 +20,9 @@ public class Note {
 		return pitch.getMidiPitch();
 	}
 	
-	public static Note randomNote(long seed)
+	public static Note randomNote()
 	{
-		rand.setSeed(seed);
-		Pitch p = Pitch.randomPitch(seed);
+		Pitch p = Pitch.randomPitch();
 		int duration = rand.nextInt(4) + 1;
 		return new Note(p, duration);
 	}
