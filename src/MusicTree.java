@@ -42,8 +42,14 @@ public class MusicTree {
 		return;
 	}
 	
-	public void crossOver(MusicTree mt)
+	public static void crossOver(MusicTree mt1, MusicTree mt2)
 	{
+		assert mt1.root != null && mt2.root != null;
+		Node n1 = mt1.root.randomSubNode();
+		Node n2 = mt2.root.randomSubNode();
+		
+		Node.swapParents(n1, n2);
+		
 		return;
 	}
 	
