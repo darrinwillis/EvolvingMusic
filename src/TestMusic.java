@@ -11,10 +11,21 @@ public class TestMusic {
 	{
 		Player player = new Player();
 		
-		int maxDepth = 12;
-		MusicTree mt = MusicTree.RandomTree(maxDepth);
+		int maxDepth = 6;
+		int populationSize = 100;
+		int generations = 10;
+		//MusicTree mt = MusicTree.RandomTree(maxDepth);
 		
-		player.playTree(mt);
+		GeneticProgram gp = new GeneticProgram
+				.GeneticProgramBuilder(generations)
+				.populationSize(populationSize)
+				.initialMaxDepth(maxDepth)
+				.doMutationProb(0)
+				.createGP();
+		
+		MusicTree evolvedTree = gp.run();
+		
+		player.playTree(evolvedTree);
 				
 		int rating = getUserRating();
 		System.out.printf("the rating was %d%n", rating);
