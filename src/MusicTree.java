@@ -93,9 +93,20 @@ public class MusicTree {
 	
 	private double calcFitness()
 	{
-		double keyScore = evaluateKey();
-		double rhythymScore = evaluateRhythm();
-		return keyScore + rhythymScore;
+//		double keyScore = evaluateKey();
+//		double rhythymScore = evaluateRhythm();
+//		return keyScore + rhythymScore;
+		return scoreHighNotes();
+	}
+	
+	private double scoreHighNotes()
+	{
+		List<MusicEvent> events = getRender();
+		
+		return events
+				.stream()
+				.mapToDouble(me -> me.note.pitch.getMidiPitch())
+				.sum();
 	}
 	
 	private double evaluateKey()

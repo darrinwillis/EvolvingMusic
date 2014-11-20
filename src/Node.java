@@ -83,6 +83,10 @@ public abstract class Node {
 		List<Node> allChildren = new ArrayList<Node>();
 		allChildren.add(this);
 		assert this.children != null;
+//		for (Node c : children)
+//		{
+//			allChildren.addAll(c.toList());
+//		}
 		this.children
 			.stream()
 			.forEach((n) -> allChildren.addAll(n.toList()));
