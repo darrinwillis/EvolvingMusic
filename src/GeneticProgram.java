@@ -44,6 +44,7 @@ public class GeneticProgram {
 				bestFitness = thisBestTree.getFitness();
 			}
 			this.population = children;
+			System.out.printf("Finished Generation %d: Best fitness was %f%n", i, bestFitness);
 		}
 		
 		return bestTree;
@@ -51,6 +52,7 @@ public class GeneticProgram {
 	
 	private void generatePopulation()
 	{
+		this.population = new ArrayList<MusicTree>();
 		for (int i = 0; i < populationSize; i++)
 		{
 			MusicTree mt = MusicTree.RandomTree(this.initialMaxDepth);

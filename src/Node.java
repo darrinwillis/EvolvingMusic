@@ -82,6 +82,7 @@ public abstract class Node {
 		//TODO: Maybe make this into a cached list instead?
 		List<Node> allChildren = new ArrayList<Node>();
 		allChildren.add(this);
+		assert this.children != null;
 		this.children
 			.stream()
 			.forEach((n) -> allChildren.addAll(n.toList()));

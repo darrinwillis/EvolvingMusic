@@ -38,6 +38,7 @@ public class MusicTree {
 				RandomNodeGenerator.randomParentNode();
 			fillNode(child, depth - 1);
 			n.children.add(child);
+			child.parent = (ParentNode)n;
 		}
 	}
 	
@@ -130,8 +131,8 @@ public class MusicTree {
 			.stream()
 			.mapToInt(Integer::intValue)
 			.sum() == numEvents;
-		int numDownBeats = eventsPerBeat.get(0);
-		int beatStrength = numDownBeats + eventsPerBeat.get(4) + eventsPerBeat.get(8) + eventsPerBeat.get(12);
+		int numDownBeats = eventsPerBeat.getOrDefault(0, 0);
+		int beatStrength = numDownBeats + eventsPerBeat.getOrDefault(4, 0) + eventsPerBeat.getOrDefault(8, 0) + eventsPerBeat.getOrDefault(12, 0);
 		return (double)(numDownBeats + beatStrength) / (double)numEvents;
 	}
 }

@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class LeafNode extends Node{
 	
 	public LeafNode() {
 		super();
-		this.children = null;
+		this.children = new ArrayList<Node>();
 	}
 	
 	public int arity() {
