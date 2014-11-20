@@ -8,8 +8,15 @@ public abstract class Node {
 	public List<Node> children;
 	private Integer size;
 	
-	public void removeFromParent() {
-		this.parent.children.remove(this);
+	public void replaceWith(Node n) {
+		ParentNode p = this.parent;
+		//Remove this child
+		p.children.remove(this);
+		p.notifyChange();
+		//Add the new child
+		p.children.add(n);
+		//Add the new parent
+		n.parent = p;
 	}
 	
 	public static void swapParents(Node n1, Node n2)

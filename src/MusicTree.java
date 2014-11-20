@@ -1,9 +1,13 @@
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 
 public class MusicTree {
+	private double parentNodeProb = .2;
+	private int newParentDepth = 3;
+	
 	private Node root;
 	private List<MusicEvent> renderedEvents = null;
 	private Double fitness = null;
@@ -37,8 +41,18 @@ public class MusicTree {
 		}
 	}
 	
-	public void mutate(double prob)
+	public void mutate()
 	{
+		Node n = root.randomSubNode();
+		Node randomNew;
+		if (ThreadLocalRandom.current().nextDouble() <= this.parentNodeProb)
+		{
+			randomNew = RandomNodeGenerator.randomParentNode();
+			fillNode(randomNew, newParentDepth);
+		} else {
+			randomNew = RandomNodeGenerator.randomLeafNode();
+		}
+		n.replaceWith(randomNew);
 		return;
 	}
 	
