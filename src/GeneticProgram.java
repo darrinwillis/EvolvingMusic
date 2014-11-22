@@ -83,8 +83,8 @@ public class GeneticProgram {
 				children.add(mt);
 			} else {
 				//We do crossover instead of mutation
-				MusicTree mt1 = matingPool.remove(0);
-				MusicTree mt2 = matingPool.remove(0);
+				MusicTree mt1 = matingPool.remove(0).deepCopy();
+				MusicTree mt2 = matingPool.remove(0).deepCopy();
 				MusicTree.crossOver(mt1, mt2);
 				children.add(mt1);
 				children.add(mt2);

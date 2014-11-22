@@ -12,6 +12,13 @@ public class NoteNode extends LeafNode {
 		this.n = Note.randomNote();
 	}
 	
+	public NoteNode deepCopy()
+	{
+		NoteNode nn = (NoteNode) super.deepCopy();
+		nn.n = this.n;
+		return nn;
+	}
+	
 	public NoteNode(Note n) {
 		super();
 		this.n = n;

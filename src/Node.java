@@ -4,12 +4,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 public abstract class Node {
-	public ParentNode parent;
+	public Node parent;
 	public List<Node> children;
 	private Integer size;
 	
+	//This is used in mutation, it directly replaced a node
 	public void replaceWith(Node n) {
-		ParentNode p = this.parent;
+		Node p = this.parent;
 		//Remove this child
 		p.children.remove(this);
 		p.notifyChange();
@@ -19,12 +20,38 @@ public abstract class Node {
 		n.parent = p;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Node deepCopy()
+	{
+		Node copy = null;
+		try {
+			copy = this.getClass().newInstance();
+			copy.size = this.size;
+			copy.parent = this.parent;
+			copy.children = this.children.getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+			assert false;
+			return null;
+		}
+
+		for (Node n : this.children)
+		{
+			Node child = n.deepCopy();
+			child.parent = copy;
+			copy.children.add(child);
+		}
+		
+		return copy;
+	}
+	
 	public static void swapParents(Node n1, Node n2)
 	{
 		assert n1.parent != null && n2.parent != null;
+		assert n1.getRoot() != n2.getRoot();
 		
-		ParentNode oldN1Parent = n1.parent;
-		ParentNode oldN2Parent = n2.parent;
+		Node oldN1Parent = n1.parent;
+		Node oldN2Parent = n2.parent;
 		
 		//TODO: It might become pertinent to have the children be ordered at some point, in which case
 		//indexOf would need to be used to assure that the place in the list is maintained
@@ -43,6 +70,15 @@ public abstract class Node {
 	}
 	
 	public abstract int arity();
+	
+	public Node getRoot()
+	{
+		if (this.parent == null)
+		{
+			return this;
+		}
+		return this.parent.getRoot();
+	}
 	
 	public int getSize()
 	{

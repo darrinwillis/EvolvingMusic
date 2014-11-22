@@ -25,6 +25,18 @@ public class MusicTree {
 		return mt;
 	}
 	
+	public MusicTree deepCopy()
+	{
+		MusicTree copy = new MusicTree();
+		copy.root = this.root.deepCopy();
+		copy.renderedEvents = null;
+		copy.fitness = this.fitness;
+		copy.parentNodeProb = this.parentNodeProb;
+		copy.newParentDepth = this.newParentDepth;
+		assert copy.root != this.root;
+		return copy;
+	}
+	
 	private static void fillNode(Node n, int depth)
 	{
 		assert n.children.isEmpty();
@@ -60,6 +72,9 @@ public class MusicTree {
 	public static void crossOver(MusicTree mt1, MusicTree mt2)
 	{
 		assert mt1.root != null && mt2.root != null;
+		assert mt1 != mt2;
+		assert mt1.root != mt2.root;
+		assert mt1.root.parent == null && mt2.root.parent == null;
 		Node n1 = mt1.root.randomSubNode();
 		Node n2 = mt2.root.randomSubNode();
 		

@@ -12,15 +12,15 @@ public class TestMusic {
 		Player player = new Player();
 		
 		int maxDepth = 6;
-		int populationSize = 100;
-		int generations = 10;
+		int populationSize = 1000;
+		int generations = 100;
 		//MusicTree mt = MusicTree.RandomTree(maxDepth);
 		
 		GeneticProgram gp = new GeneticProgram
 				.GeneticProgramBuilder(generations)
 				.populationSize(populationSize)
 				.initialMaxDepth(maxDepth)
-				.doMutationProb(0)
+				.doMutationProb(.1)
 				.createGP();
 		
 		MusicTree evolvedTree = gp.run();
