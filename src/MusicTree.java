@@ -112,14 +112,18 @@ public class MusicTree {
 	
 	private double calcFitness()
 	{
-//		double keyScore = evaluateKey();
-//		double rhythymScore = evaluateRhythm();
-//		return keyScore + rhythymScore;
 		double score = 0;
 		if (this.root.getSize() <= maxSize)
 		{
-			score = scoreHighNotes();
+			double keyScore = evaluateKey();
+			double rhythymScore = evaluateRhythm();
+			score =  keyScore + rhythymScore;
 		}
+//		double score = 0;
+//		if (this.root.getSize() <= maxSize)
+//		{
+//			score = scoreHighNotes();
+//		}
 		return score;
 	}
 	
@@ -148,7 +152,7 @@ public class MusicTree {
 		
 		//keynum is the number of notes in the key which is closest to this collection of notes
 		long keyNum = Long.max(numMajors, numMinors);
-		return (double)keyNum / (double)numPitches;
+		return (double)keyNum /*/ (double)numPitches*/;
 	}
 	
 	private double evaluateRhythm()
@@ -167,8 +171,11 @@ public class MusicTree {
 			.mapToInt(Integer::intValue)
 			.sum() == numEvents;
 		int numDownBeats = eventsPerBeat.getOrDefault(0, 0);
-		int beatStrength = numDownBeats + eventsPerBeat.getOrDefault(4, 0) + eventsPerBeat.getOrDefault(8, 0) + eventsPerBeat.getOrDefault(12, 0);
-		return (double)(numDownBeats + beatStrength) / (double)numEvents;
+		int numOnBeats = numDownBeats + eventsPerBeat.getOrDefault(4, 0) + eventsPerBeat.getOrDefault(8, 0) + eventsPerBeat.getOrDefault(12, 0);
+		double avgNotesPerBeat = (double)numOnBeats / 4;
+
+//		return (double)(numDownBeats + beatStrength) / (double)numEvents;
+		return numOnBeats;
 	}
 	
 	public String toString()

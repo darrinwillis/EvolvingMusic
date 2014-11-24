@@ -13,7 +13,7 @@ public class TestMusic {
 		
 		int maxDepth = 6;
 		int populationSize = 1000;
-		int generations = 1000;
+		int generations = 200;
 		//MusicTree mt = MusicTree.RandomTree(maxDepth);
 		
 		GeneticProgram gp = new GeneticProgram
