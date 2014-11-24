@@ -29,4 +29,9 @@ public class NoteNode extends LeafNode {
 		l.add(new MusicEvent(n, time));
 		return l;
 	}
+
+	@Override
+	String toType() {
+		return this.n.pitch.toString();
+	}
 }

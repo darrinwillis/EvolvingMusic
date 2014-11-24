@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class MusicTree {
 	private double parentNodeProb = .2;
 	private int newParentDepth = 3;
+	private int maxSize = 80;
 	
 	private Node root;
 	private List<MusicEvent> renderedEvents = null;
@@ -80,6 +81,9 @@ public class MusicTree {
 		
 		Node.swapParents(n1, n2);
 		
+		mt1.fitness = null;
+		mt2.fitness = null;
+		
 		return;
 	}
 	
@@ -111,7 +115,12 @@ public class MusicTree {
 //		double keyScore = evaluateKey();
 //		double rhythymScore = evaluateRhythm();
 //		return keyScore + rhythymScore;
-		return scoreHighNotes();
+		double score = 0;
+		if (this.root.getSize() <= maxSize)
+		{
+			score = scoreHighNotes();
+		}
+		return score;
 	}
 	
 	private double scoreHighNotes()
@@ -160,5 +169,10 @@ public class MusicTree {
 		int numDownBeats = eventsPerBeat.getOrDefault(0, 0);
 		int beatStrength = numDownBeats + eventsPerBeat.getOrDefault(4, 0) + eventsPerBeat.getOrDefault(8, 0) + eventsPerBeat.getOrDefault(12, 0);
 		return (double)(numDownBeats + beatStrength) / (double)numEvents;
+	}
+	
+	public String toString()
+	{
+		return this.root.toString();
 	}
 }

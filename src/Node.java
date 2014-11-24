@@ -99,7 +99,12 @@ public abstract class Node {
 	
 	public void notifyChange()
 	{
-		this.size = null;
+		Node n = this;
+		while (n != null)
+		{
+			n.size = null;
+			n = n.parent;
+		}
 	}
 	
 	public Node randomSubNode()
@@ -129,5 +134,29 @@ public abstract class Node {
 		return allChildren;
 	}
 	
+	abstract String toType();
+	
+	@Override
+	public String toString() {
+		String treeString = this.toType();
+		treeString += String.format("%n");
+		
+		List<Node> currentLevel = new ArrayList<Node>();
+		currentLevel.addAll(this.children);
+		
+		while (currentLevel.size() != 0)
+		{
+			List<Node> nextLevel = new ArrayList<Node>();
+			for (Node n : currentLevel)
+			{
+				treeString += n.toType() + " ";
+				nextLevel.addAll(n.children);
+			}
+			treeString += String.format("%n");
+			currentLevel = nextLevel;
+		}
+		return treeString;
+	}
+
 	public abstract List<MusicEvent> render(int time);
 }

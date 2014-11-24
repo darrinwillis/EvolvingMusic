@@ -69,6 +69,11 @@ public class Pitch {
 		this.octave = octave;
 	}
 	
+	@Override
+	public String toString() {
+		return "" + pitchClass + octave;
+	}
+
 	public int getMidiPitch()
 	{
 		return octave * (PitchClass.SIZE) + pitchClass.ordinal();

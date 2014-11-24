@@ -22,4 +22,9 @@ public class Combine extends ParentNode {
 		return 2;
 	}
 
+	@Override
+	String toType() {
+		return "COM";
+	}
+
 }

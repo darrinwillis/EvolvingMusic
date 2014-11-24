@@ -27,4 +27,9 @@ public class Follow extends ParentNode {
 		return lastTime;
 	}
 
+	@Override
+	String toType() {
+		return "FLW";
+	}
+
 }
