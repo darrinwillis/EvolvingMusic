@@ -1,15 +1,13 @@
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 
 public class MusicTree {
 	private double parentNodeProb = .2;
 	private int newParentDepth = 3;
-	private int maxSize = 80;
+	public static int maxSize = 80;
 	
-	private Node root;
+	public Node root;
 	private List<MusicEvent> renderedEvents = null;
 	private Double fitness = null;
 	
@@ -105,26 +103,9 @@ public class MusicTree {
 	{
 		if (fitness == null)
 		{
-			fitness = calcFitness();
+			fitness = Fitness.calcFitness(this);
 		}
 		return fitness;
-	}
-	
-	private double calcFitness()
-	{
-		double score = 0;
-		if (this.root.getSize() <= maxSize)
-		{
-			double keyScore = evaluateKey();
-			double rhythymScore = evaluateRhythm();
-			score =  keyScore + rhythymScore;
-		}
-//		double score = 0;
-//		if (this.root.getSize() <= maxSize)
-//		{
-//			score = scoreHighNotes();
-//		}
-		return score;
 	}
 	
 	private double scoreHighNotes()
@@ -137,46 +118,7 @@ public class MusicTree {
 				.sum();
 	}
 	
-	private double evaluateKey()
-	{
-		List<MusicEvent> events = getRender();
-		long numMajors = events
-				.stream()
-				.filter((me) -> me.note.pitch.isMajor())
-				.count();
-		long numMinors = events
-				.stream()
-				.filter((me) -> me.note.pitch.isMinor())
-				.count();
-		long numPitches = events.size();
-		
-		//keynum is the number of notes in the key which is closest to this collection of notes
-		long keyNum = Long.max(numMajors, numMinors);
-		return (double)keyNum /*/ (double)numPitches*/;
-	}
-	
-	private double evaluateRhythm()
-	{
-		List<MusicEvent> events = getRender();
-		int numEvents = events.size();
-		Map<Integer, Integer> eventsPerBeat = events
-				.stream()
-				.collect(
-						Collectors.groupingBy(
-								me -> me.time % 16,
-								Collectors.summingInt(me -> 1)));
-		assert eventsPerBeat.size() <= 16;
-		assert eventsPerBeat.values()
-			.stream()
-			.mapToInt(Integer::intValue)
-			.sum() == numEvents;
-		int numDownBeats = eventsPerBeat.getOrDefault(0, 0);
-		int numOnBeats = numDownBeats + eventsPerBeat.getOrDefault(4, 0) + eventsPerBeat.getOrDefault(8, 0) + eventsPerBeat.getOrDefault(12, 0);
-		double avgNotesPerBeat = (double)numOnBeats / 4;
 
-//		return (double)(numDownBeats + beatStrength) / (double)numEvents;
-		return numOnBeats;
-	}
 	
 	public String toString()
 	{
