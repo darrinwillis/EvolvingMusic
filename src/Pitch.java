@@ -1,8 +1,11 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 
 public class Pitch {
@@ -33,6 +36,25 @@ public class Pitch {
 						C, D, E, G, A));
 		public static final int PSIZE = PENTATONICS.size();
 		
+		// Definitions of all chords
+		public static final Set<Set<PitchClass>> DIATONICS =
+			new HashSet<Set<PitchClass>>(
+				Arrays.asList(
+					new HashSet<PitchClass>(Arrays.asList(
+							C,E,G,B)),
+					new HashSet<PitchClass>(Arrays.asList(
+							D,F,A)),
+					new HashSet<PitchClass>(Arrays.asList(
+							E,G,B)),
+					new HashSet<PitchClass>(Arrays.asList(
+							F,A,C)),
+					new HashSet<PitchClass>(Arrays.asList(
+							G,B,D,F)),
+					new HashSet<PitchClass>(Arrays.asList(
+							A,C,E)),	
+					new HashSet<PitchClass>(Arrays.asList(
+							B,D,F))));
+		
 		public static PitchClass randomPitchClass()
 		{
 			return VALUES.get(ThreadLocalRandom.current().nextInt(SIZE));
@@ -61,12 +83,35 @@ public class Pitch {
 	private static final int HIGH_OCTAVE = 8;
 	private static final int LOW_OCTAVE = 2;
 	
+	public static boolean isDiatonic(Set<Pitch> pitches)
+	{
+		Set<PitchClass> classes = (Set<PitchClass>) pitches
+			.stream()
+			.map(p -> p.pitchClass)
+			.collect(Collectors.toSet());
+		for (Set<PitchClass> chord : PitchClass.DIATONICS)
+		{
+			if (chord.containsAll(classes))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public Pitch(PitchClass pc, int octave)
 	{
 		assert octave < HIGH_OCTAVE && octave >= LOW_OCTAVE;
 		this.pitchClass = pc;
 		this.octave = octave;
+	}
+	
+	public static Pitch randomPitch()
+	{
+		PitchClass pc = PitchClass.randomPitchClass();
+
+		int octave = ThreadLocalRandom.current().nextInt(HIGH_OCTAVE - LOW_OCTAVE) + LOW_OCTAVE;
+		return new Pitch(pc, octave);
 	}
 	
 	@Override
@@ -77,14 +122,6 @@ public class Pitch {
 	public int getMidiPitch()
 	{
 		return octave * (PitchClass.SIZE) + pitchClass.ordinal();
-	}
-	
-	public static Pitch randomPitch()
-	{
-		PitchClass pc = PitchClass.randomPitchClass();
-
-		int octave = ThreadLocalRandom.current().nextInt(HIGH_OCTAVE - LOW_OCTAVE) + LOW_OCTAVE;
-		return new Pitch(pc, octave);
 	}
 	
 	public boolean isMajor()

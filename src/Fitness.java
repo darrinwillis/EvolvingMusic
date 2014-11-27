@@ -17,8 +17,10 @@ public class Fitness {
 		
 		double keyScore = evaluateKey(mt);
 		double rhythymScore = evaluateRhythm(mt);
+		double chordScore = evaluateChords(mt);
 		score += keyScore;
 		score += rhythymScore;
+		score += chordScore;
 		score -= Math.min(Math.exp(Math.abs(getLength(mt) - idealLength) / 2), score);
 		return score;
 	}
@@ -40,7 +42,7 @@ public class Fitness {
 		
 		//keynum is the number of notes in the key which is closest to this collection of notes
 		long keyNum = Long.max(numMajors, numMinors);
-		return (double)keyNum /*/ (double)numPitches*/;
+		return (double)keyNum;
 	}
 	
 	//Returns a value between 
@@ -71,6 +73,7 @@ public class Fitness {
 	{
 		Map<Integer, List<MusicEvent>> timedEvents = getChords(mt);
 		
+		int numChords = 0;
 		for (List<MusicEvent> events : timedEvents.values())
 		{
 			Set<Pitch> pitches = events
@@ -78,7 +81,12 @@ public class Fitness {
 					.map(me -> me.note.pitch)
 					.distinct()
 					.collect(Collectors.toSet());
+			if (Pitch.isDiatonic(pitches))
+			{
+				numChords++;
+			}
 		}
+		return (double)numChords;
 	}
 	
 	private static Map<Integer, List<MusicEvent>> getChords(MusicTree mt)
