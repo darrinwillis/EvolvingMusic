@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,9 +19,11 @@ public class Fitness {
 		double keyScore = evaluateKey(mt);
 		double rhythymScore = evaluateRhythm(mt);
 		double chordScore = evaluateChords(mt);
+		double leapScore = evaluateLeaps(mt);
 		score += keyScore;
 		score += rhythymScore;
 		score += chordScore;
+		score += leapScore;
 		score -= Math.min(Math.exp(Math.abs(getLength(mt) - idealLength) / 2), score);
 		return score;
 	}
@@ -87,6 +90,47 @@ public class Fitness {
 			}
 		}
 		return (double)numChords;
+	}
+	
+	private static double evaluateLeaps(MusicTree mt)
+	{
+		Map<Integer, List<MusicEvent>> timedEvents = getChords(mt);
+		Iterator<List<MusicEvent>> iter = timedEvents.values().iterator();
+		
+		if (!iter.hasNext())
+		{
+			return 0;
+		}
+		
+		int numLeaps = 0;
+		
+		int lastLow = 0;
+		int lastHigh = 0;
+		while (iter.hasNext())
+		{
+			List<MusicEvent> events = iter.next();
+			int currentLow = 0;
+			int currentHigh = 0;
+			for (MusicEvent me : events)
+			{
+				int midiPitch = me.note.getMidiPitch();
+				currentLow = Math.min(midiPitch, lastLow);
+				currentHigh = Math.max(midiPitch, lastHigh);
+			}
+			
+			if (currentLow <= lastLow - Pitch.PERFECT_FOURTH)
+			{
+				numLeaps++;
+			}
+			
+			if (currentHigh >= lastHigh + Pitch.PERFECT_FOURTH)
+			{
+				numLeaps++;
+			}
+			lastLow = currentLow;
+			lastHigh = currentHigh;
+		}
+		return timedEvents.size() - numLeaps;
 	}
 	
 	private static Map<Integer, List<MusicEvent>> getChords(MusicTree mt)

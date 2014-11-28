@@ -80,6 +80,8 @@ public class Pitch {
 	
 	public PitchClass pitchClass;
 
+	public static final int PERFECT_FOURTH = 5;
+	
 	private static final int HIGH_OCTAVE = 8;
 	private static final int LOW_OCTAVE = 2;
 	
