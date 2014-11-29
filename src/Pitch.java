@@ -37,8 +37,8 @@ public class Pitch {
 		public static final int PSIZE = PENTATONICS.size();
 		
 		// Definitions of all chords
-		public static final Set<Set<PitchClass>> DIATONICS =
-			new HashSet<Set<PitchClass>>(
+		public static final ArrayList<Set<PitchClass>> DIATONICS =
+			new ArrayList<Set<PitchClass>>(
 				Arrays.asList(
 					new HashSet<PitchClass>(Arrays.asList(
 							C,E,G,B)),
@@ -73,6 +73,114 @@ public class Pitch {
 		public static PitchClass randomMinor()
 		{
 			return MINORS.get(ThreadLocalRandom.current().nextInt(MINSIZE));
+		}
+	}
+	
+	public enum Chord {
+		I, ii, iii, IV, V, vi, vii, NC;
+		
+		public static Chord getBestChord(List<Pitch> pitches)
+		{
+			Chord bestChord = NC;
+			int bestScore = Integer.MIN_VALUE;
+			for (Chord c : Chord.values())
+			{
+				int score = chordMatch(c, pitches);
+				if (score > bestScore)
+				{
+					bestChord = c;
+					bestScore = score;
+				}
+			}
+			return bestChord;
+		}
+		
+		public static int chordMatch(Chord c, List<Pitch> pitches)
+		{
+			//NumMatched starts at 0, and incrememnts by 1 for every match, and
+			//decrements by 1 for every not match
+			if (c == NC)
+				return 0;
+			int numMatched = 0;
+			int chordIndex = c.ordinal();
+			Set<PitchClass> chordPitches = PitchClass.DIATONICS.get(chordIndex);
+			for (Pitch p : pitches)
+			{
+				numMatched += chordPitches.contains(p.pitchClass) ? 1 : -1;
+			}
+			return numMatched;
+		}
+		
+		public static boolean isCanonical(Chord a, Chord b)
+		{
+			switch(a){
+			case I:
+				return true;
+			case ii:
+				switch(b){
+				case ii:
+				case IV:
+				case V:
+					return true;
+				default:
+					return false;
+				}
+			case iii:
+				switch(b){
+				case iii:
+				case IV:
+				case V:
+				case vi:
+					return true;
+				default:
+					return false;
+				}
+			case IV:
+				switch(b){
+				case I:
+				case ii:
+				case IV:
+				case V:
+					return true;
+				default:
+					return false;
+				}
+			case V:
+				switch(b){
+				case I:
+				case V:
+					return true;
+				default:
+					return false;
+				}
+			case vi:
+				switch(b){
+				case ii:
+				case IV:
+				case V:
+				case vi:
+					return true;
+				default:
+					return false;
+				}
+			case vii:
+				switch(b){
+				case I:
+					return true;
+				default:
+					return false;
+				}
+			case NC:
+				switch(b){
+				case I:
+				case V:
+					return true;
+				default:
+					return false;
+				}
+			default:
+				return false;
+			}
 		}
 	}
 	

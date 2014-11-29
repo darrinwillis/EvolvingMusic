@@ -20,10 +20,12 @@ public class Fitness {
 		double rhythymScore = evaluateRhythm(mt);
 		double chordScore = evaluateChords(mt);
 		double leapScore = evaluateLeaps(mt);
+		double progressionScore = evaluateProgression(mt);
 		score += keyScore;
 		score += rhythymScore;
 		score += chordScore;
 		score += leapScore;
+		score += progressionScore;
 		//Progression score
 		score -= Math.min(Math.exp(Math.abs(getLength(mt) - idealLength) / 2), score);
 		return score;
@@ -96,7 +98,28 @@ public class Fitness {
 	
 	private static double evaluateProgression(MusicTree mt)
 	{
-		return 0;
+		Map<Integer, List<MusicEvent>> timedEvents = getChords(mt);
+		List<Pitch.Chord> chords = timedEvents.values()
+				.stream()
+				.map(l -> l
+						.stream()
+						.map(me -> me.note.pitch)
+						.collect(Collectors.toList()))
+				.map(l -> Pitch.Chord.getBestChord(l))
+				.collect(Collectors.toList());
+		
+		int matchedChords = 0;
+		Pitch.Chord lastChord = Pitch.Chord.NC;
+		for (Pitch.Chord c : chords)
+		{
+			if (Pitch.Chord.isCanonical(lastChord, c))
+			{
+				matchedChords++;
+			}
+			lastChord = c;
+		}
+		
+		return matchedChords;
 	}
 	
 	private static double evaluateLeaps(MusicTree mt)
