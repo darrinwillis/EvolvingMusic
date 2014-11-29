@@ -24,6 +24,7 @@ public class Fitness {
 		score += rhythymScore;
 		score += chordScore;
 		score += leapScore;
+		//Progression score
 		score -= Math.min(Math.exp(Math.abs(getLength(mt) - idealLength) / 2), score);
 		return score;
 	}
@@ -37,14 +38,13 @@ public class Fitness {
 				.stream()
 				.filter((me) -> me.note.pitch.isMajor())
 				.count();
-		long numMinors = events
+		long numPents = events
 				.stream()
-				.filter((me) -> me.note.pitch.isMinor())
+				.filter((me) -> me.note.pitch.isPentatonic())
 				.count();
-		long numPitches = events.size();
 		
 		//keynum is the number of notes in the key which is closest to this collection of notes
-		long keyNum = Long.max(numMajors, numMinors);
+		long keyNum = numMajors + numPents;
 		return (double)keyNum;
 	}
 	
@@ -64,9 +64,11 @@ public class Fitness {
 			.stream()
 			.mapToInt(Integer::intValue)
 			.sum() == numEvents;
-		int numDownBeats = eventsPerBeat.getOrDefault(0, 0);
-		int numOnBeats = numDownBeats + eventsPerBeat.getOrDefault(4, 0) + eventsPerBeat.getOrDefault(8, 0) + eventsPerBeat.getOrDefault(12, 0);
-		double avgNotesPerBeat = (double)numOnBeats / 4;
+		double numOnBeats =
+				2 * eventsPerBeat.getOrDefault(0, 0) +
+				eventsPerBeat.getOrDefault(4, 0) + 
+				1.5 * eventsPerBeat.getOrDefault(8, 0) + 
+				eventsPerBeat.getOrDefault(12, 0);
 
 //		return (double)(numDownBeats + beatStrength) / (double)numEvents;
 		return numOnBeats;
@@ -90,6 +92,11 @@ public class Fitness {
 			}
 		}
 		return (double)numChords;
+	}
+	
+	private static double evaluateProgression(MusicTree mt)
+	{
+		return 0;
 	}
 	
 	private static double evaluateLeaps(MusicTree mt)

@@ -20,7 +20,7 @@ public class TestMusic {
 				.GeneticProgramBuilder(generations)
 				.populationSize(populationSize)
 				.initialMaxDepth(maxDepth)
-				.doMutationProb(.1)
+				.doMutationProb(0)
 				.createGP();
 		
 		MusicTree evolvedTree = gp.run();
