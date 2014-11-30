@@ -13,13 +13,13 @@ public class TestMusic {
 		
 		int maxDepth = 6;
 		int populationSize = 1000;
-		int generations = 10;
+		int generations = 200;
 		
 		GeneticProgram gp = new GeneticProgram
 				.GeneticProgramBuilder(generations)
 				.populationSize(populationSize)
 				.initialMaxDepth(maxDepth)
-				.doMutationProb(0)
+				.doMutationProb(0.01)
 				.createGP();
 		
 		GPResult runResult = gp.run();

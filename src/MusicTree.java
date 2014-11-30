@@ -1,6 +1,4 @@
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
 
 public class MusicTree {
 	private double parentNodeProb = .2;
@@ -56,15 +54,16 @@ public class MusicTree {
 	public void mutate()
 	{
 		Node n = root.randomSubNode();
-		Node randomNew;
-		if (ThreadLocalRandom.current().nextDouble() <= this.parentNodeProb)
+		if (n instanceof ParentNode)
 		{
-			randomNew = RandomNodeGenerator.randomParentNode();
-			fillNode(randomNew, newParentDepth);
+			Node newNode = RandomNodeGenerator.randomParentNode();
+			newNode.children = n.children;
+			n.replaceWith(newNode);
 		} else {
-			randomNew = RandomNodeGenerator.randomLeafNode();
+			assert n instanceof NoteNode;
+			NoteNode newNote = new NoteNode();
+			n.replaceWith(newNote);
 		}
-		n.replaceWith(randomNew);
 		return;
 	}
 	
