@@ -13,8 +13,7 @@ public class TestMusic {
 		
 		int maxDepth = 6;
 		int populationSize = 1000;
-		int generations = 200;
-		//MusicTree mt = MusicTree.RandomTree(maxDepth);
+		int generations = 10;
 		
 		GeneticProgram gp = new GeneticProgram
 				.GeneticProgramBuilder(generations)
@@ -23,10 +22,15 @@ public class TestMusic {
 				.doMutationProb(0)
 				.createGP();
 		
-		MusicTree evolvedTree = gp.run();
+		GPResult runResult = gp.run();
 		
-		player.playTree(evolvedTree);
-				
+		Analyzer.showAnalysis(runResult);
+		
+		do {
+			player.playTree(runResult.bestTree);
+		} while (!checkUserEnd());
+
+
 		int rating = getUserRating();
 		System.out.printf("the rating was %d%n", rating);
 		player.close();
@@ -48,4 +52,17 @@ public class TestMusic {
 		return input;
 	}
 	
+	public boolean checkUserEnd()
+	{
+		System.out.printf("Input 'end' to quit, otherwise it will play again%n");
+		String match = "end";
+		Scanner scan = new Scanner(System.in);
+		while (!scan.hasNextLine()) {
+			Thread.yield();
+		}
+		String input = scan.nextLine();
+		boolean done = input.contains(match);
+		scan.close();
+		return done;
+	}
 }

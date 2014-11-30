@@ -108,6 +108,7 @@ public class MusicTree {
 		return fitness;
 	}
 	
+	@SuppressWarnings("unused")
 	private double scoreHighNotes()
 	{
 		List<MusicEvent> events = getRender();

@@ -25,7 +25,7 @@ public class Fitness {
 		score += rhythymScore;
 		score += chordScore;
 		score += leapScore;
-		score += progressionScore;
+		score += progressionScore * 3;
 		//Progression score
 		score -= Math.min(Math.exp(Math.abs(getLength(mt) - idealLength) / 2), score);
 		return score;

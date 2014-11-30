@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,34 +24,21 @@ public class GeneticProgram {
 		return;
 	}
 	
-	public MusicTree run()
+	public GPResult run()
 	{
-		MusicTree bestTree = null;
-		double bestFitness = Double.MIN_VALUE;
+		GPResult runResult = new GPResult();
 		generatePopulation();
 		
 		for (int i = 0; i < this.numGenerations; i++)
 		{
 			List<MusicTree> children = generateChildren();
-			MusicTree thisBestTree = children
-					.stream()
-					.max(
-							(mt1, mt2) -> 
-							Double.compare(mt1.getFitness(), mt2.getFitness())).get();
-			DoubleSummaryStatistics dss = children
-					.stream()
-					.mapToDouble(MusicTree::getFitness)
-					.summaryStatistics();
-			if (thisBestTree.getFitness() > bestFitness)
-			{
-				bestTree = thisBestTree;
-				bestFitness = thisBestTree.getFitness();
-			}
+
+			runResult.addReport(children);
+			
 			this.population = children;
-			System.out.printf("Finished Generation %d: stats were%n%s%n", i, dss.toString());
 		}
 		
-		return bestTree;
+		return runResult;
 	}
 	
 	private void generatePopulation()
