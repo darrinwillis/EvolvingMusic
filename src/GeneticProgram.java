@@ -87,13 +87,12 @@ public class GeneticProgram {
            
             List<MusicTree> matingPool = new ArrayList<MusicTree>();
            
-            int totalFitness = 0;
-            for (MusicTree mt : population)
-            {
-                    totalFitness += mt.getFitness();
-            }
+            double totalFitness = population
+            		.stream()
+            		.mapToDouble(mt -> mt.getFitness())
+            		.sum();
            
-            int currentFitness = totalFitness;
+            double currentFitness = totalFitness;
            
             //This sets up the CDF for the whole population
             for(int i = populationSize-1; i >= 0; i--)
