@@ -38,6 +38,7 @@ public class GPResult {
 		}
 		roundReport.bestTree = thisBestTree;
 		roundReport.roundFitnessStats = dss;
+		roundReport.bestReport = Fitness.getReport(thisBestTree);
 		
 		this.roundResults.add(roundReport);
 		System.out.printf("Finished Generation %d: stats were%n%s%n", currentRound, dss.toString());

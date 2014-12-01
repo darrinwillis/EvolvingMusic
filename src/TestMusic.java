@@ -32,6 +32,7 @@ public class TestMusic {
 				((double)runTime / (double)generations));
 		
 		Analyzer.showAnalysis(runResult);
+		Analyzer.showFitnessAnalysis(runResult);
 		
 		do {
 			player.playTree(runResult.bestTree);

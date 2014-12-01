@@ -6,6 +6,16 @@ import java.util.stream.Collectors;
 
 
 public class Fitness {
+	public static class Report{
+		double size;
+		double keyScore;
+		double rhythymScore;
+		double chordScore;
+		double leapScore;
+		double progressionScore;
+		double lengthScore;
+	}
+	
 	//4 sixteenths per beat, 4 beats per bar, 2 bars
 	private static int idealLength = 4 * 4 * 3;
 	public static double calcFitness(MusicTree mt)
@@ -15,13 +25,12 @@ public class Fitness {
 		{
 			return score;
 		}
-		
 		double keyScore = evaluateKey(mt);
 		double rhythymScore = evaluateRhythm(mt);
 		double chordScore = evaluateChords(mt);
 		double leapScore = evaluateLeaps(mt);
 		double progressionScore = evaluateProgression(mt);
-		score += keyScore;
+		score += keyScore/2;
 		score += rhythymScore;
 		score += chordScore;
 		score += leapScore;
@@ -29,6 +38,20 @@ public class Fitness {
 		//Progression score
 		score -= Math.min(Math.exp(Math.abs(getLength(mt) - idealLength) / 2), score);
 		return score;
+	}
+	
+	public static Report getReport(MusicTree mt)
+	{
+		Report fitRep = new Report();
+		
+		fitRep.size = mt.root.getSize();
+		fitRep.keyScore = evaluateKey(mt)/2;
+		fitRep.rhythymScore = evaluateRhythm(mt);
+		fitRep.chordScore = evaluateChords(mt);
+		fitRep.leapScore = evaluateLeaps(mt);
+		fitRep.progressionScore = evaluateProgression(mt);
+		fitRep.lengthScore = Math.exp(Math.abs(getLength(mt) - idealLength) / 2);
+		return fitRep;
 	}
 	
 	//Returns a value between 0 and 1 which represents how closely this
