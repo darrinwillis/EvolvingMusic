@@ -3,6 +3,8 @@ import java.util.Scanner;
 
 public class TestMusic {
 
+	Scanner scan = new Scanner(System.in);
+	
 	public static void main(String[] args) {
 		new TestMusic().run();
 	}
@@ -38,16 +40,14 @@ public class TestMusic {
 			player.playTree(runResult.bestTree);
 		} while (!checkUserEnd());
 
-
-		int rating = getUserRating();
-		System.out.printf("the rating was %d%n", rating);
+		System.out.println("Thanks for using Evolving Music!");
+		scan.close();
 		player.close();
 	}
 	
 	public int getUserRating()
 	{
 		System.out.printf("Rate what you just heard from 1-10%n");
-		Scanner scan = new Scanner(System.in);
 		int input = -1;
 		while (!(input >= 1 && input <= 10))
 		{
@@ -56,7 +56,6 @@ public class TestMusic {
 			}
 			input = scan.nextInt();
 		}
-		scan.close();
 		return input;
 	}
 	
@@ -64,13 +63,11 @@ public class TestMusic {
 	{
 		System.out.printf("Input 'end' to quit, otherwise it will play again%n");
 		String match = "end";
-		Scanner scan = new Scanner(System.in);
 		while (!scan.hasNextLine()) {
 			Thread.yield();
 		}
 		String input = scan.nextLine();
 		boolean done = input.contains(match);
-		scan.close();
 		return done;
 	}
 }
