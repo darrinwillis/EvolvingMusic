@@ -3,7 +3,7 @@ import java.util.List;
 public class MusicTree {
 	private double parentNodeProb = .2;
 	private int newParentDepth = 3;
-	public static int maxSize = 80;
+	public static int maxSize = 160;
 	
 	public Node root;
 	private List<MusicEvent> renderedEvents = null;

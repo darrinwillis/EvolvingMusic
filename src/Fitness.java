@@ -20,6 +20,7 @@ public class Fitness {
 	private static int idealLength = 4 * 4 * 3;
 	public static double calcFitness(MusicTree mt)
 	{
+		Map<Integer, List<MusicEvent>> events = getChords(mt);
 		double score = 0;
 		if (mt.root.getSize() > MusicTree.maxSize)
 		{
@@ -27,9 +28,9 @@ public class Fitness {
 		}
 		double keyScore = evaluateKey(mt);
 		double rhythymScore = evaluateRhythm(mt);
-		double chordScore = evaluateChords(mt);
-		double leapScore = evaluateLeaps(mt);
-		double progressionScore = evaluateProgression(mt);
+		double chordScore = evaluateChords(events);
+		double leapScore = evaluateLeaps(events);
+		double progressionScore = evaluateProgression(events);
 		score += keyScore/2;
 		score += rhythymScore;
 		score += chordScore;
@@ -42,14 +43,15 @@ public class Fitness {
 	
 	public static Report getReport(MusicTree mt)
 	{
+		Map<Integer, List<MusicEvent>> events = getChords(mt);
 		Report fitRep = new Report();
 		
 		fitRep.size = mt.root.getSize();
 		fitRep.keyScore = evaluateKey(mt)/2;
 		fitRep.rhythymScore = evaluateRhythm(mt);
-		fitRep.chordScore = evaluateChords(mt);
-		fitRep.leapScore = evaluateLeaps(mt);
-		fitRep.progressionScore = evaluateProgression(mt);
+		fitRep.chordScore = evaluateChords(events);
+		fitRep.leapScore = evaluateLeaps(events);
+		fitRep.progressionScore = evaluateProgression(events);
 		fitRep.lengthScore = Math.exp(Math.abs(getLength(mt) - idealLength) / 2);
 		return fitRep;
 	}
@@ -99,10 +101,8 @@ public class Fitness {
 		return numOnBeats;
 	}
 	
-	private static double evaluateChords(MusicTree mt)
+	private static double evaluateChords(Map<Integer, List<MusicEvent>> timedEvents)
 	{
-		Map<Integer, List<MusicEvent>> timedEvents = getChords(mt);
-		
 		int numChords = 0;
 		for (List<MusicEvent> events : timedEvents.values())
 		{
@@ -119,10 +119,9 @@ public class Fitness {
 		return (double)numChords;
 	}
 	
-	private static double evaluateProgression(MusicTree mt)
+	private static double evaluateProgression(Map<Integer, List<MusicEvent>> events)
 	{
-		Map<Integer, List<MusicEvent>> timedEvents = getChords(mt);
-		List<Pitch.Chord> chords = timedEvents.values()
+		List<Pitch.Chord> chords = events.values()
 				.stream()
 				.map(l -> l
 						.stream()
@@ -145,10 +144,9 @@ public class Fitness {
 		return matchedChords;
 	}
 	
-	private static double evaluateLeaps(MusicTree mt)
+	private static double evaluateLeaps(Map<Integer, List<MusicEvent>> events)
 	{
-		Map<Integer, List<MusicEvent>> timedEvents = getChords(mt);
-		Iterator<List<MusicEvent>> iter = timedEvents.values().iterator();
+		Iterator<List<MusicEvent>> iter = events.values().iterator();
 		
 		if (!iter.hasNext())
 		{
@@ -161,10 +159,10 @@ public class Fitness {
 		int lastHigh = 0;
 		while (iter.hasNext())
 		{
-			List<MusicEvent> events = iter.next();
+			List<MusicEvent> noteSet = iter.next();
 			int currentLow = 0;
 			int currentHigh = 0;
-			for (MusicEvent me : events)
+			for (MusicEvent me : noteSet)
 			{
 				int midiPitch = me.note.getMidiPitch();
 				currentLow = Math.min(midiPitch, lastLow);
@@ -183,7 +181,7 @@ public class Fitness {
 			lastLow = currentLow;
 			lastHigh = currentHigh;
 		}
-		return timedEvents.size() - numLeaps;
+		return events.size() - numLeaps;
 	}
 	
 	private static Map<Integer, List<MusicEvent>> getChords(MusicTree mt)

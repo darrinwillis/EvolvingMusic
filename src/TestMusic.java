@@ -13,7 +13,7 @@ public class TestMusic {
 		
 		int maxDepth = 6;
 		int populationSize = 1000;
-		int generations = 200;
+		int generations = 1000;
 		
 		GeneticProgram gp = new GeneticProgram
 				.GeneticProgramBuilder(generations)
