@@ -1,12 +1,12 @@
 import java.util.Scanner;
 
 
-public class TestMusic {
+public class EvolvingMusic {
 
 	Scanner scan = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		new TestMusic().run();
+		new EvolvingMusic().run();
 	}
 
 	public void run()
