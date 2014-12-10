@@ -2,7 +2,7 @@ import java.util.List;
 
 
 public class Util {
-	Double stdDev(List<Double> l)
+	public static Double stdDev(List<Double> l)
 	{
 		double mean = l
 				.stream()

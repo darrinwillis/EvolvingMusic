@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
@@ -100,6 +106,79 @@ public class Analyzer {
 	    result.addSeries(leapSeries);
 	    result.addSeries(progSeries);
 	    result.addSeries(lengthSeries);
+	    
+	    return result;
+	}
+	
+	public static void showMultiRunAnalysis(List<GPResult> runResults)
+	{
+		XYDataset d = createMultiDataset(runResults);
+		
+		String title = String.format("Fitness Breakdown of %d Runs", runResults.size());
+		
+        JFreeChart chart = ChartFactory.createScatterPlot(
+                title, // chart title
+                "Generation", // x axis label
+                "Value based on round best", // y axis label
+                d, // data  ***-----PROBLEM------***
+                PlotOrientation.VERTICAL,
+                true, // include legend
+                true, // tooltips
+                false // urls
+                );
+
+            // create and display a frame...
+            ChartFrame frame = new ChartFrame("Evolving Music Fitness - dswillis", chart);
+            frame.pack();
+            frame.setVisible(true);
+	}
+	
+	private static XYDataset createMultiDataset(List<GPResult> runResults) {
+	    XYSeriesCollection result = new XYSeriesCollection();
+	    XYSeries maxSeries = new XYSeries("Max Fitness");
+	    XYSeries upStdSeries = new XYSeries("Avg + StdDev");
+	    XYSeries meanSeries = new XYSeries("Avg");
+	    XYSeries downSeries = new XYSeries("Avg - StdDev");
+	    XYSeries minSeries = new XYSeries("Min Fitness");
+	    
+	    int size = runResults.get(0).roundResults.size();
+	    for (int i = 0; i < size; i++)
+	    {
+	    	List<GPRoundResult> currentRound = new ArrayList<GPRoundResult>();
+	    	for (GPResult gpr : runResults)
+	    	{
+	    		currentRound.add(gpr.roundResults.get(i));
+	    	}
+	    	
+	    	double max, up, mean, down, min;
+	    	
+	    	DoubleSummaryStatistics dss = currentRound.stream()
+	    			.mapToDouble(gprr -> gprr.roundFitnessStats.getMax())
+	    			.summaryStatistics();
+	    	
+	    	double stdDev = Util.stdDev(
+	    			currentRound
+	    				.stream()
+	    				.map(gprr -> gprr.roundFitnessStats.getMax())
+	    				.collect(Collectors.toList())
+	    			);
+	    	max = dss.getMax();
+	    	mean = dss.getAverage();
+	    	up = mean + stdDev;
+	    	down = mean + stdDev;
+	    	min = dss.getMin();
+	    	
+	    	maxSeries.add(i, max);
+	    	upStdSeries.add(i, up);
+	    	meanSeries.add(i, mean);
+	    	downSeries.add(i, down);
+	    	minSeries.add(i, min);
+	    }
+	    result.addSeries(maxSeries);
+	    result.addSeries(upStdSeries);
+	    result.addSeries(meanSeries);
+	    result.addSeries(downSeries);
+	    result.addSeries(minSeries);
 	    
 	    return result;
 	}
