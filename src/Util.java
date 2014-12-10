@@ -9,11 +9,11 @@ public class Util {
 				.mapToDouble(d -> d.doubleValue())
 				.average()
 				.getAsDouble();
-		double variance = l
+		double standardDeviation = l
 				.stream()
 				.mapToDouble(d -> (d - mean) * (d - mean))
 				.average()
 				.getAsDouble();
-		return Math.sqrt(variance);
+		return standardDeviation;
 	}
 }

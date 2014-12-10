@@ -84,7 +84,7 @@ public class MusicTree {
 		return;
 	}
 	
-	public synchronized List<MusicEvent> getRender()
+	public List<MusicEvent> getRender()
 	{
 		if (renderedEvents == null)
 		{
@@ -98,7 +98,7 @@ public class MusicTree {
 		return root.render(0);
 	}
 	
-	public synchronized Double getFitness()
+	public Double getFitness()
 	{
 		if (fitness == null)
 		{

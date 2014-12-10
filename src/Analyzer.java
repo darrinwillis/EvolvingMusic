@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -164,7 +165,7 @@ public class Analyzer {
 	    	max = dss.getMax();
 	    	mean = dss.getAverage();
 	    	up = mean + stdDev;
-	    	down = mean - stdDev;
+	    	down = mean + stdDev;
 	    	min = dss.getMin();
 	    	
 	    	maxSeries.add(i, max);
