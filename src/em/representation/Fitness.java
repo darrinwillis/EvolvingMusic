@@ -1,8 +1,12 @@
+package em.representation;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import em.representation.music.MusicEvent;
+import em.representation.music.Pitch;
 
 
 public class Fitness {

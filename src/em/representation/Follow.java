@@ -1,4 +1,7 @@
+package em.representation;
 import java.util.List;
+
+import em.representation.music.MusicEvent;
 
 
 public class Follow extends ParentNode {

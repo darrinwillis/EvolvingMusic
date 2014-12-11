@@ -1,6 +1,9 @@
+package em.representation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import em.representation.music.MusicEvent;
 
 
 public abstract class Node {

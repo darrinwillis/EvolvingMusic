@@ -1,3 +1,4 @@
+package em.util;
 import java.util.List;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -8,6 +9,10 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
+
+import em.representation.MusicTree;
+import em.representation.music.MusicEvent;
+import em.representation.music.Note;
 
 
 public class Player {

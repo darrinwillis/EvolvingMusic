@@ -1,3 +1,4 @@
+package em.representation;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
@@ -10,6 +11,10 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
+import em.geneticProgram.GPResult;
+import em.geneticProgram.GPRoundResult;
+import em.util.Util;
 
 
 public class Analyzer {

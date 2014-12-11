@@ -1,6 +1,9 @@
+package em.geneticProgram;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import em.representation.MusicTree;
 
 
 public class GeneticProgram {

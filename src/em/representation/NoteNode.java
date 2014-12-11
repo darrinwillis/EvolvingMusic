@@ -1,5 +1,9 @@
+package em.representation;
 import java.util.ArrayList;
 import java.util.List;
+
+import em.representation.music.MusicEvent;
+import em.representation.music.Note;
 
 
 public class NoteNode extends LeafNode {

@@ -1,4 +1,7 @@
+package em.representation;
 import java.util.List;
+
+import em.representation.music.MusicEvent;
 
 public class MusicTree {
 	private double parentNodeProb = .2;
