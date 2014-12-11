@@ -1,11 +1,12 @@
 package em.representation;
+
 import java.util.ArrayList;
 
-public abstract class ParentNode extends Node {
-	
-	public ParentNode() {
+abstract class ParentNode extends Node {
+
+	protected ParentNode() {
 		super();
-		
+
 		this.children = new ArrayList<Node>();
 	}
 

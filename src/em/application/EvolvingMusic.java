@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 import em.geneticProgram.GPResult;
 import em.geneticProgram.GeneticProgram;
-import em.representation.Analyzer;
+import em.util.Analyzer;
 import em.util.Player;
 
 

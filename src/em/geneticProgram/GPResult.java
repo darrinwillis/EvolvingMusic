@@ -17,7 +17,7 @@ public class GPResult {
 		this.roundResults = new ArrayList<GPRoundResult>();
 	}
 
-	public void addReport(List<MusicTree> children)
+	protected void addReport(List<MusicTree> children)
 	{
 		GPRoundResult roundReport = new GPRoundResult();
 

@@ -1,16 +1,18 @@
 package em.representation;
+
 import java.util.List;
 
 import em.representation.music.MusicEvent;
 
+class Follow extends ParentNode {
 
-public class Follow extends ParentNode {
-
-	public int arity() {
+	protected int arity()
+	{
 		return 2;
 	}
 
-	public List<MusicEvent> render(int time) {
+	protected List<MusicEvent> render(int time)
+	{
 		assert this.children.size() == 2;
 		Node firstChild = this.children.get(0);
 		Node secondChild = this.children.get(1);
@@ -19,8 +21,8 @@ public class Follow extends ParentNode {
 		totalEvents.addAll(secondChild.render(endingTime + 1));
 		return totalEvents;
 	}
-	
-	private int getEndingTime(List<MusicEvent> list)
+
+	protected int getEndingTime(List<MusicEvent> list)
 	{
 		int lastTime = 0;
 		for (MusicEvent me : list)
@@ -31,7 +33,8 @@ public class Follow extends ParentNode {
 	}
 
 	@Override
-	String toType() {
+	protected String toType()
+	{
 		return "FLW";
 	}
 

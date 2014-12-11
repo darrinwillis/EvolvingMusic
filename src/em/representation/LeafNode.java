@@ -1,19 +1,21 @@
 package em.representation;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import em.representation.music.MusicEvent;
 
-public abstract class LeafNode extends Node{
-	
-	public LeafNode() {
+abstract class LeafNode extends Node {
+
+	protected LeafNode() {
 		super();
 		this.children = new ArrayList<Node>();
 	}
-	
-	public int arity() {
+
+	protected int arity()
+	{
 		return 0;
 	}
 
-	public abstract List<MusicEvent> render(int time);
+	protected abstract List<MusicEvent> render(int time);
 }
