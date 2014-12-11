@@ -117,7 +117,7 @@ public class MusicTree {
 				.mapToDouble(me -> me.note.pitch.getMidiPitch())
 				.sum();
 	}
-	
+
 
 	
 	public String toString()
