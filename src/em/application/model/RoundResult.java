@@ -6,6 +6,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import em.geneticProgram.GPRoundResult;
 import em.representation.MusicTree;
 
 public class RoundResult {
@@ -17,6 +18,10 @@ public class RoundResult {
 
 	public RoundResult() {
 		this(0, null);
+	}
+
+	public RoundResult(GPRoundResult gprr) {
+		this(gprr.generation, gprr.bestTree);
 	}
 
 	public RoundResult(int generation, MusicTree mt) {

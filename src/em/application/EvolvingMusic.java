@@ -31,7 +31,7 @@ public class EvolvingMusic {
 				.createGP();
 		
 		long startTime = System.currentTimeMillis();
-		GPResult runResult = gp.run();
+		GPResult runResult = gp.runWithResult();
 		long stopTime = System.currentTimeMillis();
 		long runTime = stopTime - startTime;
 		System.out.printf("The run time for %d generations was %ds, which is %fms per generation%n,",

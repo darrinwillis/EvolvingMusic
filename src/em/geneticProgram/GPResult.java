@@ -17,7 +17,7 @@ public class GPResult {
 		this.roundResults = new ArrayList<GPRoundResult>();
 	}
 
-	protected void addReport(List<MusicTree> children)
+	protected GPRoundResult addReport(List<MusicTree> children)
 	{
 		GPRoundResult roundReport = new GPRoundResult();
 
@@ -39,11 +39,12 @@ public class GPResult {
 		roundReport.bestTree = thisBestTree;
 		roundReport.roundFitnessStats = dss;
 		roundReport.bestReport = Fitness.getReport(thisBestTree);
+		roundReport.generation = this.roundResults.size();
 
 		this.roundResults.add(roundReport);
 		System.out.printf("Finished Generation %d: stats were%n%s%n",
 				currentRound, dss.toString());
 		currentRound++;
-		return;
+		return roundReport;
 	}
 }

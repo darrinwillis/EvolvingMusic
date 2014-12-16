@@ -9,4 +9,5 @@ public class GPRoundResult {
 	public DoubleSummaryStatistics roundFitnessStats;
 	public MusicTree bestTree;
 	public Fitness.Report bestReport;
+	public int generation;
 }

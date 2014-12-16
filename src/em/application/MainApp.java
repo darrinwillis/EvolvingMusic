@@ -3,8 +3,10 @@ package em.application;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -12,6 +14,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import em.application.model.RoundResult;
 import em.application.view.RoundOverviewController;
+import em.geneticProgram.GPRoundResult;
+import em.geneticProgram.GeneticProgram;
 import em.representation.MusicTree;
 
 public class MainApp extends Application {
@@ -23,10 +27,6 @@ public class MainApp extends Application {
 			.observableArrayList();
 
 	public MainApp() {
-		RoundResult rr = new RoundResult();
-		rr.setGeneration(5);
-		rr.setTree(MusicTree.RandomTree(4));
-		this.roundData.add(rr);
 	}
 
 	@Override
@@ -94,6 +94,44 @@ public class MainApp extends Application {
 	public void playTree(MusicTree mt)
 	{
 
+	}
+
+	public void startRun()
+	{
+		int maxDepth = 6;
+		int populationSize = 1000;
+		int generations = 100;
+
+		// @formatter:off
+		GeneticProgram gp = new GeneticProgram
+				.GeneticProgramBuilder(generations)
+				.populationSize(populationSize)
+				.initialMaxDepth(maxDepth)
+				.doMutationProb(0.01)
+				.createGP();
+		// @formatter:on
+
+		gp.setMainApp(this);
+
+		Task<Void> task = new Task<Void>() {
+			@Override
+			public Void call() throws Exception
+			{
+				gp.run();
+				return null;
+			}
+		};
+
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
+	}
+
+	public void addRound(GPRoundResult gprr)
+	{
+		RoundResult rr = new RoundResult(gprr);
+
+		Platform.runLater(() -> roundData.add(rr));
 	}
 
 	public static void main(String[] args)

@@ -12,7 +12,7 @@
          <children>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" text="Button" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#startRun" text="Start Run" />
                </children>
             </HBox>
             <TableView fx:id="roundTable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.rowSpan="2147483647">

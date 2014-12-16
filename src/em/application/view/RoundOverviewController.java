@@ -1,5 +1,6 @@
 package em.application.view;
 
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -40,12 +41,27 @@ public class RoundOverviewController {
 	{
 		this.mainApp = ma;
 
-		this.roundTable.setItems(ma.getRoundData());
+		SortedList<RoundResult> sortedData = new SortedList<RoundResult>(
+				ma.getRoundData());
+
+		sortedData.comparatorProperty().bind(
+				this.roundTable.comparatorProperty());
+
+		this.roundTable.setItems(sortedData);
 	}
 
 	private void playTree(RoundResult rr)
 	{
-		this.mainApp.playTree(rr.getTree());
+		if (rr != null && rr.getTree() != null)
+		{
+			this.mainApp.playTree(rr.getTree());
+		}
+	}
+
+	@FXML
+	private void startRun()
+	{
+		this.mainApp.startRun();
 	}
 
 }
