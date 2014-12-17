@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -12,13 +13,22 @@
          <children>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#startRun" text="Start Run" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#startRun" text="Start Run">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#playTree" text="Play">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
             </HBox>
             <TableView fx:id="roundTable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.rowSpan="2147483647">
                <columns>
-                  <TableColumn fx:id="generationColumn" prefWidth="75.0" text="Generation" />
-                  <TableColumn fx:id="fitnessColumn" prefWidth="75.0" text="Max Fitness" />
+                  <TableColumn fx:id="generationColumn" prefWidth="109.0" text="Generation" />
+                  <TableColumn fx:id="fitnessColumn" editable="false" prefWidth="190.0" text="Max Fitness" />
                </columns>
             </TableView>
          </children>

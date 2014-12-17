@@ -17,6 +17,7 @@ import em.application.view.RoundOverviewController;
 import em.geneticProgram.GPRoundResult;
 import em.geneticProgram.GeneticProgram;
 import em.representation.MusicTree;
+import em.util.Player;
 
 public class MainApp extends Application {
 
@@ -25,6 +26,8 @@ public class MainApp extends Application {
 
 	private ObservableList<RoundResult> roundData = FXCollections
 			.observableArrayList();
+
+	private Player player = new Player();
 
 	public MainApp() {
 	}
@@ -93,7 +96,30 @@ public class MainApp extends Application {
 
 	public void playTree(MusicTree mt)
 	{
+		Task<Void> task = new Task<Void>() {
+			@Override
+			protected Void call()
+			{
+				MusicTree tree = mt;
+				if (tree != null)
+				{
+					player.playTree(tree);
+					try
+					{
+						Thread.sleep(500);
+					} catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+					player.close();
+				}
+				return null;
+			}
+		};
 
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 	}
 
 	public void startRun()
@@ -138,5 +164,4 @@ public class MainApp extends Application {
 	{
 		launch(args);
 	}
-
 }

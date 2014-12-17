@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import em.application.MainApp;
 import em.application.model.RoundResult;
+import em.representation.MusicTree;
 
 public class RoundOverviewController {
 	@FXML
@@ -29,12 +30,6 @@ public class RoundOverviewController {
 				.generationProperty());
 		fitnessColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.fitnessProperty());
-
-		roundTable
-				.getSelectionModel()
-				.selectedItemProperty()
-				.addListener(
-						(observable, oldValue, newValue) -> playTree(newValue));
 	}
 
 	public void setMainApp(MainApp ma)
@@ -50,11 +45,19 @@ public class RoundOverviewController {
 		this.roundTable.setItems(sortedData);
 	}
 
-	private void playTree(RoundResult rr)
+	@FXML
+	private void playTree()
 	{
-		if (rr != null && rr.getTree() != null)
+		// @formatter:off
+		int selectedIndex = roundTable
+			.getSelectionModel()
+			.getSelectedIndex();
+		// @formatter:on
+		if (selectedIndex >= 0)
 		{
-			this.mainApp.playTree(rr.getTree());
+			MusicTree mt = this.roundTable.getItems().get(selectedIndex)
+					.getTree();
+			this.mainApp.playTree(mt);
 		}
 	}
 
