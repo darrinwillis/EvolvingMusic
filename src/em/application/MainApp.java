@@ -4,8 +4,12 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,8 +28,12 @@ public class MainApp extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 
-	private ObservableList<RoundResult> roundData = FXCollections
-			.observableArrayList();
+	// private ObservableList<RoundResult> roundData = FXCollections
+	// .observableArrayList();
+	private ListProperty<RoundResult> roundData = new SimpleListProperty<RoundResult>(
+			FXCollections.observableArrayList());
+	private SimpleBooleanProperty running = new SimpleBooleanProperty(false);
+	private SimpleIntegerProperty numGenerations = new SimpleIntegerProperty(1);
 
 	private Player player = new Player();
 
@@ -89,9 +97,19 @@ public class MainApp extends Application {
 		}
 	}
 
-	public ObservableList<RoundResult> getRoundData()
+	public ListProperty<RoundResult> getRoundData()
 	{
 		return roundData;
+	}
+
+	public ObservableBooleanValue getRunning()
+	{
+		return this.running;
+	}
+
+	public SimpleIntegerProperty getNumGenerations()
+	{
+		return this.numGenerations;
 	}
 
 	public void playTree(MusicTree mt)
@@ -138,12 +156,15 @@ public class MainApp extends Application {
 		// @formatter:on
 
 		gp.setMainApp(this);
+		this.numGenerations.set(gp.getNumGenerations());
 
 		Task<Void> task = new Task<Void>() {
 			@Override
 			public Void call() throws Exception
 			{
+				Platform.runLater(() -> running.set(true));
 				gp.run();
+				Platform.runLater(() -> running.set(false));
 				return null;
 			}
 		};

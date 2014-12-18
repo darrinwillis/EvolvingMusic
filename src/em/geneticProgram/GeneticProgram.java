@@ -38,6 +38,11 @@ public class GeneticProgram implements Runnable {
 		this.mainApp = ma;
 	}
 
+	public int getNumGenerations()
+	{
+		return this.numGenerations;
+	}
+
 	public void run()
 	{
 		this.runWithResult();

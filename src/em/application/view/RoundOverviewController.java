@@ -1,7 +1,11 @@
 package em.application.view;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ListProperty;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import em.application.MainApp;
@@ -15,6 +19,8 @@ public class RoundOverviewController {
 	private TableColumn<RoundResult, Number> generationColumn;
 	@FXML
 	private TableColumn<RoundResult, Number> fitnessColumn;
+	@FXML
+	private ProgressBar progressBar;
 
 	private MainApp mainApp;
 
@@ -36,8 +42,26 @@ public class RoundOverviewController {
 	{
 		this.mainApp = ma;
 
+		ListProperty<RoundResult> roundData = ma.getRoundData();
+
+		// Set progress bar binding
+		this.progressBar.progressProperty().unbind();
+
+		BooleanBinding showBar = Bindings.and(ma.getRunning(), ma
+				.getNumGenerations().isNotEqualTo(0));
+
+		// @formatter:off
+		roundData.sizeProperty().addListener(
+				(observable, oldValue, newValue) -> 
+				this.progressBar.setProgress(
+						newValue.doubleValue() / ma.getNumGenerations().doubleValue()));
+		// @formatter:on
+		this.progressBar.visibleProperty().bind(showBar);
+
+		// Set table comparator to keep the data sorting the same as the table
+		// sorting
 		SortedList<RoundResult> sortedData = new SortedList<RoundResult>(
-				ma.getRoundData());
+				roundData);
 
 		sortedData.comparatorProperty().bind(
 				this.roundTable.comparatorProperty());
