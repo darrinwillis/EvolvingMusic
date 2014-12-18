@@ -3,8 +3,14 @@ package em.application.view;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,8 +27,14 @@ public class RoundOverviewController {
 	private TableColumn<RoundResult, Number> fitnessColumn;
 	@FXML
 	private ProgressBar progressBar;
+	@FXML
+	private ScatterChart<Number, Number> scatterChart;
 
 	private MainApp mainApp;
+	private ListProperty<RoundResult> roundData;
+	private ObservableList<Series<Number, Number>> chartData = FXCollections
+			.observableArrayList();
+	private Series<Number, Number> bestTreeSeries = new Series<Number, Number>();
 
 	public RoundOverviewController() {
 
@@ -36,13 +48,14 @@ public class RoundOverviewController {
 				.generationProperty());
 		fitnessColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.fitnessProperty());
+		scatterChart.setData(getChartData());
 	}
 
 	public void setMainApp(MainApp ma)
 	{
 		this.mainApp = ma;
 
-		ListProperty<RoundResult> roundData = ma.getRoundData();
+		this.roundData = ma.getRoundData();
 
 		// Set progress bar binding
 		this.progressBar.progressProperty().unbind();
@@ -67,6 +80,32 @@ public class RoundOverviewController {
 				this.roundTable.comparatorProperty());
 
 		this.roundTable.setItems(sortedData);
+
+		chartData.add(bestTreeSeries);
+		// Set up the chart
+		this.roundData.addListener(new ListChangeListener<RoundResult>() {
+
+			@Override
+			public void onChanged(
+					javafx.collections.ListChangeListener.Change<? extends RoundResult> c)
+			{
+				while (c.next())
+				{
+					c.getAddedSubList().forEach(
+							roundResult -> bestTreeSeries.getData().add(
+									new Data<Number, Number>(roundResult
+											.getGeneration(), roundResult
+											.getFitness())));
+
+				}
+
+			}
+		});
+	}
+
+	private ObservableList<Series<Number, Number>> getChartData()
+	{
+		return this.chartData;
 	}
 
 	@FXML

@@ -40,9 +40,9 @@
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </ProgressBar>
-            <ScatterChart GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <ScatterChart fx:id="scatterChart" GridPane.columnSpan="2" GridPane.rowIndex="2">
               <xAxis>
-                <CategoryAxis label="generations" prefHeight="15.0" prefWidth="543.0" side="BOTTOM" />
+                <NumberAxis label="generations" prefHeight="15.0" prefWidth="543.0" side="BOTTOM" />
               </xAxis>
               <yAxis>
                 <NumberAxis label="fitness" prefHeight="195.0" prefWidth="39.0" side="LEFT" />
