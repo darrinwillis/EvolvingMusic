@@ -3,9 +3,9 @@ package em.application.view;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
@@ -22,6 +22,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import em.application.MainApp;
+import em.application.model.GPParameters;
 import em.application.model.RoundResult;
 import em.geneticProgram.GPRoundResult;
 import em.geneticProgram.GeneticProgram;
@@ -31,6 +32,11 @@ import em.util.Player;
 public class RoundOverviewController implements GeneticProgram.Reporter {
 	private static final String startRunDisabledText = "Running...";
 	private static final String startRunEnabledText = "Start Run";
+
+	private static final int defaultNumGens = 100;
+	private static final int defaultPopSize = 1000;
+	private static final double defaultMutRate = 0.01d;
+	private static final int maxDepth = 6;
 
 	// FXML Items
 	@FXML
@@ -56,17 +62,19 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	private ListProperty<RoundResult> roundData = new SimpleListProperty<RoundResult>(
 			FXCollections.observableArrayList());
 	// The view for the data from the perspective of the chart
-	private ObservableList<Series<Number, Number>> chartData = FXCollections
-			.observableArrayList();
+	private ObservableList<Series<Number, Number>> chartData = FXCollections.observableArrayList();
 	// The series for the best tree
 	private Series<Number, Number> bestTreeSeries = new Series<Number, Number>();
 
 	// Run parameters
+	private GPParameters params = new GPParameters(defaultNumGens, defaultPopSize, defaultMutRate);
+
 	private SimpleBooleanProperty running = new SimpleBooleanProperty(false);
-	private SimpleIntegerProperty numGenerations = new SimpleIntegerProperty(1);
+
+	// private SimpleIntegerProperty numGenerations = new
+	// SimpleIntegerProperty(1);
 
 	public RoundOverviewController() {
-
 	}
 
 	@FXML
@@ -92,9 +100,8 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 				{
 					c.getAddedSubList().forEach(
 							roundResult -> bestTreeSeries.getData().add(
-									new Data<Number, Number>(roundResult
-											.getGeneration(), roundResult
-											.getFitness())));
+									new Data<Number, Number>(roundResult.getGeneration(),
+											roundResult.getFitness())));
 				}
 
 			}
@@ -104,18 +111,14 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	private void setupTable()
 	{
 		// Initialize the person table with the two columns.
-		generationColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.generationProperty());
-		fitnessColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.fitnessProperty());
+		generationColumn.setCellValueFactory(cellData -> cellData.getValue().generationProperty());
+		fitnessColumn.setCellValueFactory(cellData -> cellData.getValue().fitnessProperty());
 
 		// Set table comparator to keep the data sorting the same as the table
 		// sorting
-		SortedList<RoundResult> sortedData = new SortedList<RoundResult>(
-				roundData);
+		SortedList<RoundResult> sortedData = new SortedList<RoundResult>(roundData);
 
-		sortedData.comparatorProperty().bind(
-				this.roundTable.comparatorProperty());
+		sortedData.comparatorProperty().bind(this.roundTable.comparatorProperty());
 
 		this.roundTable.setItems(sortedData);
 	}
@@ -126,8 +129,7 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		// Set progress bar binding
 		this.progressBar.progressProperty().unbind();
 
-		BooleanBinding showBar = Bindings.and(getRunning(), getNumGenerations()
-				.isNotEqualTo(0));
+		BooleanBinding showBar = Bindings.and(getRunning(), getNumGenerations().isNotEqualTo(0));
 
 		// @formatter:off
 		roundData.sizeProperty().addListener(
@@ -176,11 +178,16 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		return this.running;
 	}
 
-	public SimpleIntegerProperty getNumGenerations()
+	public IntegerProperty getNumGenerations()
 	{
-		return this.numGenerations;
+		return this.params.numGenerations();
 	}
 
+	public GPParameters getParameters()
+	{
+		return this.params;
+	}
+	
 	@FXML
 	private void playTree()
 	{
@@ -191,8 +198,7 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		// @formatter:on
 		if (selectedIndex >= 0)
 		{
-			MusicTree mt = this.roundTable.getItems().get(selectedIndex)
-					.getTree();
+			MusicTree mt = this.roundTable.getItems().get(selectedIndex).getTree();
 			// Make a task to play the tree
 			Task<Void> task = new Task<Void>() {
 				@Override
@@ -224,24 +230,13 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	@FXML
 	private void startRun()
 	{
-		int maxDepth = 6;
-		int populationSize = 1000;
-		int generations = 100;
-
 		this.roundData.clear();
 		this.bestTreeSeries.getData().clear();
 
-		// @formatter:off
-		GeneticProgram gp = new GeneticProgram
-				.GeneticProgramBuilder(generations)
-				.populationSize(populationSize)
-				.initialMaxDepth(maxDepth)
-				.doMutationProb(0.01)
-				.createGP();
-		// @formatter:on
+		GeneticProgram gp = makeBuilder(this.params).createGP();
 
 		gp.setReportDelegate(this);
-		this.numGenerations.set(gp.getNumGenerations());
+		this.params.numGenerations().set(gp.getNumGenerations());
 
 		Task<Void> task = new Task<Void>() {
 			@Override
@@ -257,6 +252,16 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		Thread th = new Thread(task);
 		th.setDaemon(true);
 		th.start();
+	}
+	
+	private GeneticProgram.GeneticProgramBuilder makeBuilder(GPParameters params)
+	{
+		GeneticProgram.GeneticProgramBuilder builder = new GeneticProgram
+				.GeneticProgramBuilder(params.getNumGenerations())
+				.populationSize(params.getPopulationSize())
+				.initialMaxDepth(maxDepth)
+				.doMutationProb(params.getMutationProbability());
+		return builder;
 	}
 
 	public void addRound(GPRoundResult gprr)

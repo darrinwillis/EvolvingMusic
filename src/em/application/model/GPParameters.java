@@ -15,7 +15,7 @@ public class GPParameters {
 		this(0, 0, 0);
 	}
 
-	public GPParameters(int numGen, int popSize, int mutProb) {
+	public GPParameters(int numGen, int popSize, double mutProb) {
 		this.numGenerations = new SimpleIntegerProperty(numGen);
 		this.populationSize = new SimpleIntegerProperty(popSize);
 		this.mutationProb = new SimpleDoubleProperty(mutProb);

@@ -37,9 +37,10 @@ public class RunParametersController {
 
 	public void setParameters(GPParameters params)
 	{
+		this.params = params;
 		numGenerationsTextField.setText(Integer.toString(params.getNumGenerations()));
 		populationSizeTextField.setText(Integer.toString(params.getPopulationSize()));
-		mutationProbTextField.setText(String.format("%f%", params.getMutationProbability() * 100));
+		mutationProbTextField.setText(String.format("%.2f%%", params.getMutationProbability() * 100));
 	}
 
 	@FXML
@@ -49,7 +50,7 @@ public class RunParametersController {
 		{
 			params.setNumGenerations(Integer.parseInt(numGenerationsTextField.getText()));
 			params.setPopulationSize(Integer.parseInt(populationSizeTextField.getText()));
-			params.setMutationProbability(Double.parseDouble(mutationProbTextField.getText()));
+			params.setMutationProbability(parsePercentage(mutationProbTextField.getText()));
 			dialogStage.close();
 		}
 	}
@@ -61,20 +62,20 @@ public class RunParametersController {
 
 		String errorMessage = "";
 
-		newNumGens = Integer.parseInt(numGenerationsTextField.getText());
-		if (newNumGens == null)
-		{
+		try{
+			newNumGens = Integer.parseInt(numGenerationsTextField.getText());
+		} catch (NumberFormatException e) {
 			errorMessage += "No valid number of generations\n";
 		}
-		newPopSize = Integer.parseInt(populationSizeTextField.getText());
-		if (newPopSize == null)
-		{
+		try{
+			newPopSize = Integer.parseInt(populationSizeTextField.getText());
+		} catch (NumberFormatException e) {
 			errorMessage += "No valid population size\n";
 		}
-		newMutProb = Double.parseDouble(mutationProbTextField.getText());
-		if (newMutProb == null)
-		{
-			errorMessage += "No valid mutation probability%n";
+		try{
+			newMutProb = parsePercentage(mutationProbTextField.getText());
+		} catch (NumberFormatException e) {
+			errorMessage += "No valid mutation probability\n";
 		}
 
 		if (errorMessage.length() == 0)
@@ -82,14 +83,24 @@ public class RunParametersController {
 			return true;
 		} else
 		{
-			//Show error @formatter:off
             Dialogs.create()
             	.title("Invalid Fields")
             	.masthead("Please correct invalid fields")
             	.message(errorMessage)
             	.showError();
-            //@formatter:on
 			return false;
 		}
+	}
+	
+	public double parsePercentage(String s) throws NumberFormatException
+	{
+		double value;
+		if (s.endsWith("%"))
+		{
+			value = Double.parseDouble(s.trim().replace("%", "")) / 100;
+		} else {
+			value = Double.parseDouble(s);
+		}
+		return value;
 	}
 }
