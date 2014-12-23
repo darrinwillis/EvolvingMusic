@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -28,6 +29,9 @@ import em.representation.MusicTree;
 import em.util.Player;
 
 public class RoundOverviewController implements GeneticProgram.Reporter {
+	private static final String startRunDisabledText = "Running...";
+	private static final String startRunEnabledText = "Start Run";
+
 	// FXML Items
 	@FXML
 	private TableView<RoundResult> roundTable;
@@ -39,6 +43,10 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	private ProgressBar progressBar;
 	@FXML
 	private ScatterChart<Number, Number> scatterChart;
+	@FXML
+	private Button startRunButton;
+	@FXML
+	private Button playButton;
 
 	private Player player = new Player();
 
@@ -64,37 +72,14 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	@FXML
 	private void initialize()
 	{
-		// Initialize the person table with the two columns.
-		generationColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.generationProperty());
-		fitnessColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.fitnessProperty());
+		setupTable();
+		setupChart();
+		setupControls();
+	}
+
+	private void setupChart()
+	{
 		scatterChart.setData(getChartData());
-
-		// Set progress bar binding
-		this.progressBar.progressProperty().unbind();
-
-		BooleanBinding showBar = Bindings.and(getRunning(), getNumGenerations()
-				.isNotEqualTo(0));
-
-		// @formatter:off
-		roundData.sizeProperty().addListener(
-				(observable, oldValue, newValue) -> 
-				this.progressBar.setProgress(
-						newValue.doubleValue() / getNumGenerations().doubleValue()));
-		// @formatter:on
-		this.progressBar.visibleProperty().bind(showBar);
-
-		// Set table comparator to keep the data sorting the same as the table
-		// sorting
-		SortedList<RoundResult> sortedData = new SortedList<RoundResult>(
-				roundData);
-
-		sortedData.comparatorProperty().bind(
-				this.roundTable.comparatorProperty());
-
-		this.roundTable.setItems(sortedData);
-
 		chartData.add(bestTreeSeries);
 		// Set up the chart
 		this.roundData.addListener(new ListChangeListener<RoundResult>() {
@@ -110,9 +95,67 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 									new Data<Number, Number>(roundResult
 											.getGeneration(), roundResult
 											.getFitness())));
-
 				}
 
+			}
+		});
+	}
+
+	private void setupTable()
+	{
+		// Initialize the person table with the two columns.
+		generationColumn.setCellValueFactory(cellData -> cellData.getValue()
+				.generationProperty());
+		fitnessColumn.setCellValueFactory(cellData -> cellData.getValue()
+				.fitnessProperty());
+
+		// Set table comparator to keep the data sorting the same as the table
+		// sorting
+		SortedList<RoundResult> sortedData = new SortedList<RoundResult>(
+				roundData);
+
+		sortedData.comparatorProperty().bind(
+				this.roundTable.comparatorProperty());
+
+		this.roundTable.setItems(sortedData);
+	}
+
+	private void setupControls()
+	{
+		// Progress bar
+		// Set progress bar binding
+		this.progressBar.progressProperty().unbind();
+
+		BooleanBinding showBar = Bindings.and(getRunning(), getNumGenerations()
+				.isNotEqualTo(0));
+
+		// @formatter:off
+		roundData.sizeProperty().addListener(
+				(observable, oldValue, newValue) -> 
+				this.progressBar.setProgress(
+						newValue.doubleValue() / getNumGenerations().doubleValue()));
+		// @formatter:on
+		this.progressBar.visibleProperty().bind(showBar);
+
+		// BUTTONS
+
+		this.getRunning().addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue)
+			{
+				// We are now running
+
+				// Disable the button
+				this.startRunButton.setDisable(true);
+				this.startRunButton.setText(startRunDisabledText);
+
+			} else
+			{
+				// We are no longer running
+
+				// Enable the button
+				this.startRunButton.setDisable(false);
+				this.startRunButton.setText(startRunEnabledText);
 			}
 		});
 
@@ -121,7 +164,6 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	public void setMainApp(MainApp ma)
 	{
 		this.mainApp = ma;
-
 	}
 
 	private ObservableList<Series<Number, Number>> getChartData()
@@ -185,6 +227,9 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		int maxDepth = 6;
 		int populationSize = 1000;
 		int generations = 100;
+
+		this.roundData.clear();
+		this.bestTreeSeries.getData().clear();
 
 		// @formatter:off
 		GeneticProgram gp = new GeneticProgram
