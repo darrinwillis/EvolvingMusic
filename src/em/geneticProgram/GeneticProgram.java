@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import em.application.MainApp;
 import em.representation.MusicTree;
 
 public class GeneticProgram implements Runnable {
@@ -14,7 +13,7 @@ public class GeneticProgram implements Runnable {
 	private final double doMutationProb;
 
 	// for applications
-	private MainApp mainApp;
+	private Reporter reportDelegate;
 
 	private List<MusicTree> population;
 
@@ -33,9 +32,9 @@ public class GeneticProgram implements Runnable {
 	}
 	// @formatter:on
 
-	public void setMainApp(MainApp ma)
+	public void setReportDelegate(Reporter reporter)
 	{
-		this.mainApp = ma;
+		this.reportDelegate = reporter;
 	}
 
 	public int getNumGenerations()
@@ -61,9 +60,9 @@ public class GeneticProgram implements Runnable {
 
 			this.population = children;
 
-			if (this.mainApp != null)
+			if (this.reportDelegate != null)
 			{
-				this.mainApp.addRound(gprr);
+				this.reportDelegate.addRound(gprr);
 			}
 		}
 
@@ -182,5 +181,9 @@ public class GeneticProgram implements Runnable {
 			return new GeneticProgram(numGenerations, populationSize,
 					initialMaxDepth, doMutationProb);
 		}
+	}
+
+	public interface Reporter {
+		public void addRound(GPRoundResult rr);
 	}
 }
