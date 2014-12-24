@@ -3,6 +3,7 @@ package em.application.view;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,8 +31,12 @@ import em.representation.MusicTree;
 import em.util.Player;
 
 public class RoundOverviewController implements GeneticProgram.Reporter {
+	// Start run button text
 	private static final String startRunDisabledText = "Running...";
 	private static final String startRunEnabledText = "Start Run";
+	// Play button text
+	private static final String startPlayText = "Play";
+	private static final String stopPlayText = "Stop";
 
 	private static final int defaultNumGens = 100;
 	private static final int defaultPopSize = 1000;
@@ -70,6 +75,7 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	private GPParameters params = new GPParameters(defaultNumGens, defaultPopSize, defaultMutRate);
 
 	private SimpleBooleanProperty running = new SimpleBooleanProperty(false);
+	private BooleanProperty playing = new SimpleBooleanProperty(false);
 
 	// private SimpleIntegerProperty numGenerations = new
 	// SimpleIntegerProperty(1);
@@ -148,19 +154,44 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 				// We are now running
 
 				// Disable the button
-				this.startRunButton.setDisable(true);
-				this.startRunButton.setText(startRunDisabledText);
+				Platform.runLater(() ->
+				{
+					this.startRunButton.setDisable(true);
+					this.startRunButton.setText(startRunDisabledText);
+				});
 
 			} else
 			{
 				// We are no longer running
 
 				// Enable the button
-				this.startRunButton.setDisable(false);
-				this.startRunButton.setText(startRunEnabledText);
+				Platform.runLater(() ->
+				{
+					this.startRunButton.setDisable(false);
+					this.startRunButton.setText(startRunEnabledText);
+				});
 			}
 		});
-
+		
+		this.playing.addListener((observable, oldValue, newValue) ->
+		{
+			if (newValue)
+			{
+				//We are now playing
+				Platform.runLater(() -> this.playButton.setText(stopPlayText));
+			} else {
+				//We are not playing
+				Platform.runLater(() -> this.playButton.setText(startPlayText));
+			}
+		});
+		//Button is initially disabled
+		this.playButton.setDisable(true);
+		BooleanBinding playDisabled = Bindings.and(
+				Bindings.lessThan(
+						this.roundTable.getSelectionModel().selectedIndexProperty(), 
+						0), 
+				Bindings.not(playing));
+		this.playButton.disableProperty().bind(playDisabled);
 	}
 
 	public void setMainApp(MainApp ma)
@@ -189,13 +220,28 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	}
 	
 	@FXML
+	private void handlePlay()
+	{
+		if (playing.get())
+		{
+			playing.set(false);
+			Platform.runLater(() -> 
+			{
+				player.stop();
+				player.close();
+			});
+		} else {
+			playing.set(true);
+			playTree();
+			//playing is set to false in the task
+		}
+	}
+	
 	private void playTree()
 	{
-		// @formatter:off
 		int selectedIndex = roundTable
 			.getSelectionModel()
 			.getSelectedIndex();
-		// @formatter:on
 		if (selectedIndex >= 0)
 		{
 			MusicTree mt = this.roundTable.getItems().get(selectedIndex).getTree();
@@ -215,7 +261,9 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 						{
 							e.printStackTrace();
 						}
+
 						player.close();
+						playing.set(false);
 					}
 					return null;
 				}

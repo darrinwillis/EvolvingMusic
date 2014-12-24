@@ -66,12 +66,28 @@ public class Player {
             while(sequencer.isRunning()){
             	Thread.yield();
             }
-            sequencer.stop();
             
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	        sequencer.stop();
+            
+        } catch (IllegalStateException e) {
+        } catch (Exception e)
+		{
+			e.printStackTrace();
+		}
     }
+	
+	public void stop()
+	{
+		if (sequencer.isRunning())
+		{
+			sequencer.stop();
+		}
+	}
+	
+	public boolean isOpen()
+	{
+		return sequencer.isOpen();
+	}
 	
 	private Sequence synthesize(MusicTree mt) throws InvalidMidiDataException
 	{
