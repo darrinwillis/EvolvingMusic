@@ -3,10 +3,14 @@ package em.application.view;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
@@ -74,7 +78,7 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	// Run parameters
 	private GPParameters params = new GPParameters(defaultNumGens, defaultPopSize, defaultMutRate);
 	// Currently running max number of generations for ProgressBar
-	private Integer currentRunMaxGenerations;
+	private DoubleProperty currentRunMaxGenerations = new SimpleDoubleProperty(1);
 	
 	private SimpleBooleanProperty running = new SimpleBooleanProperty(false);
 	private BooleanProperty playing = new SimpleBooleanProperty(false);
@@ -138,53 +142,29 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		this.progressBar.progressProperty().unbind();
 
 		BooleanBinding showBar = Bindings.and(getRunning(), getNumGenerations().isNotEqualTo(0));
-
-		// @formatter:off
-		roundData.sizeProperty().addListener((observable, oldValue, newValue) -> 
-				this.progressBar.setProgress(
-						newValue.doubleValue() / currentRunMaxGenerations));
-		// @formatter:on
 		this.progressBar.visibleProperty().bind(showBar);
+		
+		NumberBinding barPercentage = Bindings.divide(roundData.sizeProperty(), currentRunMaxGenerations);
+		this.progressBar.progressProperty().bind(barPercentage);
 
 		// BUTTONS
 
-		this.getRunning().addListener((observable, oldValue, newValue) ->
-		{
-			if (newValue)
-			{
-				// We are now running
-
-				// Disable the button
-				Platform.runLater(() ->
-				{
-					this.startRunButton.setDisable(true);
-					this.startRunButton.setText(startRunDisabledText);
-				});
-
-			} else
-			{
-				// We are no longer running
-
-				// Enable the button
-				Platform.runLater(() ->
-				{
-					this.startRunButton.setDisable(false);
-					this.startRunButton.setText(startRunEnabledText);
-				});
-			}
-		});
+		// Start Run Button
+		StringBinding startRunButtonText = 
+				Bindings.when(this.getRunning())
+				.then(startRunDisabledText)
+				.otherwise(startRunEnabledText);
 		
-		this.playing.addListener((observable, oldValue, newValue) ->
-		{
-			if (newValue)
-			{
-				//We are now playing
-				Platform.runLater(() -> this.playButton.setText(stopPlayText));
-			} else {
-				//We are not playing
-				Platform.runLater(() -> this.playButton.setText(startPlayText));
-			}
-		});
+		this.startRunButton.textProperty().bind(startRunButtonText);
+		this.startRunButton.disableProperty().bind(this.getRunning());
+		
+		// Play Button
+		StringBinding playButtonText =
+				Bindings.when(this.playing)
+				.then(stopPlayText)
+				.otherwise(startPlayText);
+		this.playButton.textProperty().bind(playButtonText);
+
 		//Button is initially disabled
 		this.playButton.setDisable(true);
 		BooleanBinding playDisabled = Bindings.and(
@@ -285,8 +265,7 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		GeneticProgram gp = makeBuilder(this.params).createGP();
 
 		gp.setReportDelegate(this);
-//		this.params.numGenerations().set(gp.getNumGenerations());
-		this.currentRunMaxGenerations = new Integer(params.getNumGenerations());
+		this.currentRunMaxGenerations.set(params.getNumGenerations());
 
 		Task<Void> task = new Task<Void>() {
 			@Override
