@@ -57,23 +57,20 @@ public class RunParametersController {
 
 	public boolean checkInput()
 	{
-		Integer newNumGens, newPopSize;
-		Double newMutProb;
-
 		String errorMessage = "";
 
 		try{
-			newNumGens = Integer.parseInt(numGenerationsTextField.getText());
+			Integer.parseInt(numGenerationsTextField.getText());
 		} catch (NumberFormatException e) {
 			errorMessage += "No valid number of generations\n";
 		}
 		try{
-			newPopSize = Integer.parseInt(populationSizeTextField.getText());
+			Integer.parseInt(populationSizeTextField.getText());
 		} catch (NumberFormatException e) {
 			errorMessage += "No valid population size\n";
 		}
 		try{
-			newMutProb = parsePercentage(mutationProbTextField.getText());
+			parsePercentage(mutationProbTextField.getText());
 		} catch (NumberFormatException e) {
 			errorMessage += "No valid mutation probability\n";
 		}
