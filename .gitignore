@@ -12,6 +12,8 @@ bin
 *.war
 *.ear
 
+build
+
 # Turned in files
 *.zip
 evolving_music_dswillis
