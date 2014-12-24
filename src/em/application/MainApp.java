@@ -75,6 +75,7 @@ public class MainApp extends Application {
 			RoundOverviewController controller = loader.getController();
 			this.roundController = controller;
 			controller.setMainApp(this);
+			controller.setStage(primaryStage);
 
 		} catch (IOException e)
 		{

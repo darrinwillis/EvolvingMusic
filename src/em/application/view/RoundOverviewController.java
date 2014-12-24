@@ -18,6 +18,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart.Data;
@@ -26,6 +27,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import em.application.MainApp;
 import em.application.model.GPParameters;
 import em.application.model.RoundResult;
@@ -67,24 +70,25 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 
 	// The parent of this view
 	private MainApp mainApp;
+	
 	// The current data from the GP run
 	private ListProperty<RoundResult> roundData = new SimpleListProperty<RoundResult>(
 			FXCollections.observableArrayList());
+	
 	// The view for the data from the perspective of the chart
 	private ObservableList<Series<Number, Number>> chartData = FXCollections.observableArrayList();
+	
 	// The series for the best tree
 	private Series<Number, Number> bestTreeSeries = new Series<Number, Number>();
 
-	// Run parameters
 	private GPParameters params = new GPParameters(defaultNumGens, defaultPopSize, defaultMutRate);
-	// Currently running max number of generations for ProgressBar
-	private DoubleProperty currentRunMaxGenerations = new SimpleDoubleProperty(1);
 	
+	// Status Properties
+	private DoubleProperty currentRunMaxGenerations = new SimpleDoubleProperty(1);
 	private SimpleBooleanProperty running = new SimpleBooleanProperty(false);
 	private BooleanProperty playing = new SimpleBooleanProperty(false);
 
-	// private SimpleIntegerProperty numGenerations = new
-	// SimpleIntegerProperty(1);
+	private Stage stage;
 
 	public RoundOverviewController() {
 	}
@@ -178,6 +182,20 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	public void setMainApp(MainApp ma)
 	{
 		this.mainApp = ma;
+	}
+	
+	public void setStage(Stage stage)
+	{
+		this.stage = stage;
+		
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			
+			@Override
+			public void handle(WindowEvent t) {
+				player.stop();
+				player.close();
+			}
+		});
 	}
 
 	private ObservableList<Series<Number, Number>> getChartData()
