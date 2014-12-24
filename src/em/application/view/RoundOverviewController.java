@@ -73,7 +73,9 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 
 	// Run parameters
 	private GPParameters params = new GPParameters(defaultNumGens, defaultPopSize, defaultMutRate);
-
+	// Currently running max number of generations for ProgressBar
+	private Integer currentRunMaxGenerations;
+	
 	private SimpleBooleanProperty running = new SimpleBooleanProperty(false);
 	private BooleanProperty playing = new SimpleBooleanProperty(false);
 
@@ -138,10 +140,9 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		BooleanBinding showBar = Bindings.and(getRunning(), getNumGenerations().isNotEqualTo(0));
 
 		// @formatter:off
-		roundData.sizeProperty().addListener(
-				(observable, oldValue, newValue) -> 
+		roundData.sizeProperty().addListener((observable, oldValue, newValue) -> 
 				this.progressBar.setProgress(
-						newValue.doubleValue() / getNumGenerations().doubleValue()));
+						newValue.doubleValue() / currentRunMaxGenerations));
 		// @formatter:on
 		this.progressBar.visibleProperty().bind(showBar);
 
@@ -284,7 +285,8 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 		GeneticProgram gp = makeBuilder(this.params).createGP();
 
 		gp.setReportDelegate(this);
-		this.params.numGenerations().set(gp.getNumGenerations());
+//		this.params.numGenerations().set(gp.getNumGenerations());
+		this.currentRunMaxGenerations = new Integer(params.getNumGenerations());
 
 		Task<Void> task = new Task<Void>() {
 			@Override
