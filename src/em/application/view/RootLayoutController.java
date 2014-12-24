@@ -27,4 +27,10 @@ public class RootLayoutController {
 	{
 		mainApp.showEditDialog();
 	}
+	
+	@FXML
+	public void handleExit()
+	{
+		mainApp.exit();
+	}
 }

@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import em.application.view.RootLayoutController;
 import em.application.view.RoundOverviewController;
 import em.application.view.RunParametersController;
@@ -109,6 +110,17 @@ public class MainApp extends Application {
 		}
 	}
 
+	public void exit()
+	{
+		primaryStage.fireEvent(
+			    new WindowEvent(
+			        primaryStage,
+			        WindowEvent.WINDOW_CLOSE_REQUEST
+			    )
+			);
+		this.primaryStage.close();
+	}
+	
 	public static void main(String[] args)
 	{
 		launch(args);
