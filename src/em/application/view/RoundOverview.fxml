@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="em.application.view.RoundOverviewController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@chart.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="em.application.view.RoundOverviewController">
    <children>
       <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <TableView fx:id="roundTable" prefHeight="100.0" prefWidth="200.0" GridPane.rowSpan="2">
                <columns>
                   <TableColumn fx:id="generationColumn" maxWidth="200.0" prefWidth="83.0" text="Generation" />
-                  <TableColumn fx:id="fitnessColumn" editable="false" maxWidth="500.0" prefWidth="215.0" text="Max Fitness" />
+                  <TableColumn fx:id="fitnessColumn" editable="false" maxWidth="500.0" prefWidth="215.0" sortType="DESCENDING" text="Max Fitness" />
                </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -39,9 +39,9 @@
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </ProgressBar>
-            <ScatterChart fx:id="scatterChart" alternativeRowFillVisible="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+            <ScatterChart fx:id="scatterChart" alternativeRowFillVisible="false" legendSide="RIGHT" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
               <xAxis>
-                <NumberAxis animated="false" label="generations" prefHeight="15.0" prefWidth="543.0" side="BOTTOM" />
+                <NumberAxis animated="false" label="generations" prefHeight="38.0" prefWidth="531.0" side="BOTTOM" />
               </xAxis>
               <yAxis>
                 <NumberAxis label="fitness" prefHeight="195.0" prefWidth="39.0" side="LEFT" />

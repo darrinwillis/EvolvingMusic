@@ -1,0 +1,24 @@
+.chart-legend {
+   -fx-background-color:  transparent;
+   -fx-padding: 20px;
+}
+ 
+.chart-legend-item-symbol{
+   -fx-background-radius: 0;
+}
+ 
+.chart-legend-item{
+    -fx-text-fill: #191970;
+}
+
+.default-color0.chart-symbol { /* hollow circle */
+    -fx-background-color: #860061;
+    -fx-background-radius: 2px;
+    -fx-padding: 2px;
+}
+
+.default-color1.chart-symbol { /* hollow circle */
+    -fx-background-color: #3aec61;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}

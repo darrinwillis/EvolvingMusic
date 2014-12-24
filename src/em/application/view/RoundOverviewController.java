@@ -27,6 +27,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import em.application.MainApp;
@@ -80,6 +82,7 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	
 	// The series for the best tree
 	private Series<Number, Number> bestTreeSeries = new Series<Number, Number>();
+	private Series<Number, Number> selectedTreeSeries = new Series<Number, Number>();
 
 	private GPParameters params = new GPParameters(defaultNumGens, defaultPopSize, defaultMutRate);
 	
@@ -103,8 +106,10 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 
 	private void setupChart()
 	{
+		bestTreeSeries.setName("Best Tree of Generation");
 		scatterChart.setData(getChartData());
 		chartData.add(bestTreeSeries);
+
 		// Set up the chart
 		this.roundData.addListener(new ListChangeListener<RoundResult>() {
 
@@ -122,6 +127,24 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 
 			}
 		});
+		
+		selectedTreeSeries.setName("Selected Tree");
+		Rectangle rect = new Rectangle(5, 5);
+		rect.setFill(Color.GREEN);
+		selectedTreeSeries.setNode(rect);
+		chartData.add(selectedTreeSeries);
+		this.roundTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+		{
+			this.selectedTreeSeries.getData().clear();
+			if (newValue != null)
+			{
+				this.selectedTreeSeries.getData().add(
+						new Data<Number, Number>(
+								newValue.getGeneration(), 
+								newValue.getFitness()));
+			}
+		});
+		
 	}
 
 	private void setupTable()
@@ -262,7 +285,7 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 						}
 
 						player.close();
-						playing.set(false);
+						Platform.runLater(() -> playing.set(false));
 					}
 					return null;
 				}
