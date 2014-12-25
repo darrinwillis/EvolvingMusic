@@ -47,7 +47,7 @@ public class RoundOverviewController implements GeneticProgram.Reporter {
 	private static final String startPlayText = "Play";
 	private static final String stopPlayText = "Stop";
 
-	private static final int defaultNumGens = 100;
+	private static final int defaultNumGens = 1000;
 	private static final int defaultPopSize = 1000;
 	private static final double defaultMutRate = 0.01d;
 	private static final int maxDepth = 6;
